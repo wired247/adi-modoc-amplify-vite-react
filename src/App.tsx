@@ -24,7 +24,7 @@ const App: React.FC = () => {
   const [showDeleteDevice, setShowDeleteDevice] = useState(false);
   const [newDevice, setNewDevice] = useState({ kitId: '', deviceId: '' });
   const [selectedForDeletion, setSelectedForDeletion] = useState<string[]>([]);
-  const [showDeviceProfile, setShowDeviceProfile] = useState<Device | null>(null);
+  const [deviceProfile, setDeviceProfile] = useState<Device | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,15 +42,19 @@ const App: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(AWS_DEVICES_ENDPOINT, {method: 'GET', mode: 'no-cors', headers: {'Content-Type': 'application/json'}});
+      // const response = await fetch(AWS_DEVICES_ENDPOINT, {method: 'GET', mode: 'no-cors', headers: {'Content-Type': 'application/json'}});
+      const response = await fetch(AWS_DEVICES_ENDPOINT);
       
+      // if (response.status > 0) {
       if (!response.ok) {
-        console.info('response is not ok');
+        // console.info('response bad status, cant check OK');
+        console.info('response is not OK');
         console.info(response)
         throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`);
       }
       
       const data = await response.json();
+      /*
       
       // Validate that the response has the expected structure
       if (Array.isArray(data)) {
@@ -63,9 +67,10 @@ const App: React.FC = () => {
         console.info(`bad fetched data: ${data}`);
         throw new Error('Invalid response format: expected array of devices');
       }
+      */
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(errorMessage);
+      // setError(errorMessage);
       console.error('Error fetching devices:', err);
       
       // Fallback to hardcoded data in case of error
@@ -238,7 +243,7 @@ const App: React.FC = () => {
                   <td>{formatDate(new Date(device.lastActive))}</td>
                   <td>{device.batteryLevel}%</td>
                   <td>
-                    <button className="device-profile" onClick={() => showDeviceProfile(device)}>
+                    <button className="device-profile" onClick={() => setDeviceProfile(device)}>
                       Update
                     </button>
                   </td>
@@ -310,13 +315,13 @@ const App: React.FC = () => {
   const renderProfileScreen = () => (
     <div className="profile-screen">
       <div className="profile-header">
-        <button className="back-button" onClick={() => setShowDeviceProfile(null)}>
+        <button className="back-button" onClick={() => setDeviceProfile(null)}>
           ← Back
         </button>
         <div className="device-info">
-          <h3>{selectedDevice?.id}</h3>
-          <span>Kit: {selectedDevice?.kitId}</span>
-          <span>Last Active: {selectedDevice?.lastActive}</span>
+          <h3>{deviceProfile?.id}</h3>
+          <span>Kit: {deviceProfile?.kitId}</span>
+          <span>Last Active: {deviceProfile?.lastActive}</span>
         </div>
       </div>
       <div className="profile-container">
@@ -368,7 +373,7 @@ const App: React.FC = () => {
       <div className="main-content">
         {selectedDevice ? (
           renderMeasurementScreen()
-        ) : showDeviceProfile ? (
+        ) : deviceProfile ? (
           renderProfileScreen()
         ) :(
           <>
