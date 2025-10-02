@@ -53,7 +53,7 @@ const App: React.FC = () => {
         throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`);
       }
       
-      const data = await response.json();
+      // const data = await response.json();
       /*
       
       // Validate that the response has the expected structure
@@ -69,7 +69,7 @@ const App: React.FC = () => {
       }
       */
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       // setError(errorMessage);
       console.error('Error fetching devices:', err);
       
