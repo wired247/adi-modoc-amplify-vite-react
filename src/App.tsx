@@ -24,6 +24,7 @@ const App: React.FC = () => {
   const [showDeleteDevice, setShowDeleteDevice] = useState(false);
   const [newDevice, setNewDevice] = useState({ kitId: '', deviceId: '' });
   const [selectedForDeletion, setSelectedForDeletion] = useState<string[]>([]);
+  const [showDeviceProfile, setShowDeviceProfile] = useState<Device | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -41,9 +42,11 @@ const App: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(AWS_DEVICES_ENDPOINT);
+      const response = await fetch(AWS_DEVICES_ENDPOINT, {method: 'GET', mode: 'no-cors', headers: {'Content-Type': 'application/json'}});
       
       if (!response.ok) {
+        console.info('response is not ok');
+        console.info(response)
         throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`);
       }
       
@@ -51,10 +54,13 @@ const App: React.FC = () => {
       
       // Validate that the response has the expected structure
       if (Array.isArray(data)) {
+        console.info('fetched data is an array');
         setDevices(data);
       } else if (data.devices && Array.isArray(data.devices)) {
+        console.info('fetched data.devices is an array');
         setDevices(data.devices);
       } else {
+        console.info(`bad fetched data: ${data}`);
         throw new Error('Invalid response format: expected array of devices');
       }
     } catch (err) {
@@ -202,6 +208,7 @@ const App: React.FC = () => {
               <th>Heart Rate</th>
               <th>Last Active</th>
               <th>Battery Level</th>
+              <th>Activities</th>
             </tr>
           </thead>
           <tbody>
@@ -230,6 +237,11 @@ const App: React.FC = () => {
                   <td>{device.heartRate} bpm</td>
                   <td>{formatDate(new Date(device.lastActive))}</td>
                   <td>{device.batteryLevel}%</td>
+                  <td>
+                    <button className="device-profile" onClick={() => showDeviceProfile(device)}>
+                      Update
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
@@ -294,6 +306,30 @@ const App: React.FC = () => {
       </div>
     </div>
   );
+  
+  const renderProfileScreen = () => (
+    <div className="profile-screen">
+      <div className="profile-header">
+        <button className="back-button" onClick={() => setShowDeviceProfile(null)}>
+          ← Back
+        </button>
+        <div className="device-info">
+          <h3>{selectedDevice?.id}</h3>
+          <span>Kit: {selectedDevice?.kitId}</span>
+          <span>Last Active: {selectedDevice?.lastActive}</span>
+        </div>
+      </div>
+      <div className="profile-container">
+        <h2>Profile</h2>
+        <div className="profile-box">
+          <div className="profile-label">Target</div>
+          <div className="profile-value">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="app">
@@ -332,7 +368,9 @@ const App: React.FC = () => {
       <div className="main-content">
         {selectedDevice ? (
           renderMeasurementScreen()
-        ) : (
+        ) : showDeviceProfile ? (
+          renderProfileScreen()
+        ) :(
           <>
             {activeView === 'dashboard' && renderDashboard()}
             {activeView === 'devices' && renderDevices()}
