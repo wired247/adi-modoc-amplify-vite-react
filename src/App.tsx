@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './App.css';
-
-
 import AnalogDevicesLogo1 from "./AnalogDevicesLogo1";
+import './App.css';
 
 interface Device {
   id: string;
@@ -12,6 +10,8 @@ interface Device {
   lastActive: string;
   batteryLevel: number;
   detail: string;
+  minHR: number;
+  maxHR: number;
 }
 
 const App: React.FC = () => {
@@ -25,6 +25,7 @@ const App: React.FC = () => {
   const [newDevice, setNewDevice] = useState({ kitId: '', deviceId: '' });
   const [selectedForDeletion, setSelectedForDeletion] = useState<string[]>([]);
   const [deviceProfile, setDeviceProfile] = useState<Device | null>(null);
+  const [showDeviceProfile, setShowDeviceProfile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,35 +43,56 @@ const App: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // const response = await fetch(AWS_DEVICES_ENDPOINT, {method: 'GET', mode: 'no-cors', headers: {'Content-Type': 'application/json'}});
-      const response = await fetch(AWS_DEVICES_ENDPOINT);
+      // Try CORS first, fallback to no-cors if needed
+      let response;
+      try {
+        response = await fetch(AWS_DEVICES_ENDPOINT, {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'omit'
+        });
+      } catch (corsError) {
+        console.warn('CORS request failed, trying no-cors mode:', corsError);
+        // Fallback to no-cors mode (won't be able to read response body)
+        response = await fetch(AWS_DEVICES_ENDPOINT, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+      }
       
-      // if (response.status > 0) {
+      // For no-cors mode, we can't check response.ok or read JSON
+      if (response.type === 'opaque') {
+        console.info('Received opaque response (no-cors mode), using fallback data');
+        throw new Error('CORS configuration needed on server');
+      }
+      
       if (!response.ok) {
-        // console.info('response bad status, cant check OK');
-        console.info('response is not OK');
-        console.info(response)
         throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`);
       }
       
-      // const data = await response.json();
-      /*
+      const data = await response.json();
       
       // Validate that the response has the expected structure
       if (Array.isArray(data)) {
-        console.info('fetched data is an array');
         setDevices(data);
       } else if (data.devices && Array.isArray(data.devices)) {
-        console.info('fetched data.devices is an array');
         setDevices(data.devices);
       } else {
-        console.info(`bad fetched data: ${data}`);
         throw new Error('Invalid response format: expected array of devices');
       }
-      */
     } catch (err) {
-      // const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      // setError(errorMessage);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      
+      // Provide specific guidance for CORS errors
+      if (errorMessage.includes('CORS') || errorMessage.includes('blocked')) {
+        setError('CORS Error, using fallback data');
+      } else {
+        setError(errorMessage);
+      }
       console.error('Error fetching devices:', err);
       
       // Fallback to hardcoded data in case of error
@@ -82,7 +104,9 @@ const App: React.FC = () => {
           "heartRate": 82,
           "lastActive": "2025-04-04T09:12:13",
           "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Nihanth_device/?format=json"
+          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Nihanth_device/",
+          "minHR": 78,
+          "maxHR": 120
         },
         {
           "id": "ADI_Samsung_SM-A146U1",
@@ -91,7 +115,9 @@ const App: React.FC = () => {
           "heartRate": 65,
           "lastActive": "2025-04-09T16:39:16",
           "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Samsung_SM-A146U1/?format=json"
+          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Samsung_SM-A146U1/",
+          "minHR": 65,
+          "maxHR": 110
         },
         {
           "id": "ADI_Subash_testing",
@@ -99,8 +125,10 @@ const App: React.FC = () => {
           "status": "disconnected",
           "heartRate": 0,
           "lastActive": "2025-04-07T05:02:57",
-          "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Subash_testing/?format=json"
+          "batteryLevel": 80,
+          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Subash_testing/",
+          "minHR": 78,
+          "maxHR": 115
         },
         {
           "id": "ADI_User1_test_device",
@@ -108,8 +136,10 @@ const App: React.FC = () => {
           "status": "disconnected",
           "heartRate": 0,
           "lastActive": "2025-08-13T09:47:29",
-          "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_User1_test_device/?format=json"
+          "batteryLevel": 40,
+          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_User1_test_device/",
+          "minHR": 68,
+          "maxHR": 100
         },
       ]);
     } finally {
@@ -161,8 +191,44 @@ const App: React.FC = () => {
     setShowDeleteDevice(false);
   };
 
+  const handleUpdateProfile = async () => {
+    if (deviceProfile) {
+      const deviceId = deviceProfile.id
+      let response;
+      try {
+        // update local state
+        setDevices(devices.map(d => d.id === deviceId ? deviceProfile : d));
+        setShowDeviceProfile(false);
+
+        // update device shadow on the server
+        response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}`, {
+           method: 'PATCH',
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(deviceProfile)
+        });
+
+        if (!response.ok) {
+          console.error(`Failed to fetch devices: ${response.status} ${response.statusText}`, response);
+        }
+      
+        const message = await response.json();
+        console.log("profile updated:")
+        console.log(message)
+
+      } catch (error) {
+        console.error('Error updating device profile:', error);
+      }
+    }
+  };
+
   const handleFileUpload = () => {
     fileInputRef.current?.click();
+  };
+
+  const openUrlInNewTab = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const renderDashboard = () => (
@@ -243,7 +309,10 @@ const App: React.FC = () => {
                   <td>{formatDate(new Date(device.lastActive))}</td>
                   <td>{device.batteryLevel}%</td>
                   <td>
-                    <button className="device-profile" onClick={() => setDeviceProfile(device)}>
+                    <button className="device-profile" onClick={() => { 
+                      setDeviceProfile(device); 
+                      setShowDeviceProfile(true);
+                    }}>
                       Update
                     </button>
                   </td>
@@ -296,8 +365,8 @@ const App: React.FC = () => {
         </button>
         <div className="device-info">
           <h3>{selectedDevice?.id}</h3>
+          <span>Kit: {selectedDevice?.kitId}</span>
           <span>Battery: {selectedDevice?.batteryLevel}%</span>
-          <span>Status: {selectedDevice?.status}</span>
         </div>
       </div>
       <div className="measurements-container">
@@ -309,30 +378,17 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
-  
-  const renderProfileScreen = () => (
-    <div className="profile-screen">
-      <div className="profile-header">
-        <button className="back-button" onClick={() => setDeviceProfile(null)}>
-          ← Back
+      <div className="measurement-bottom">
+        <button className="view-activity-button" onClick={() => {
+          if (selectedDevice?.detail) {
+            openUrlInNewTab(selectedDevice.detail);
+          } else {
+            alert('No detail URL available for this device.');
+          }
+        }}>
+          View All Activity
         </button>
-        <div className="device-info">
-          <h3>{deviceProfile?.id}</h3>
-          <span>Kit: {deviceProfile?.kitId}</span>
-          <span>Last Active: {deviceProfile?.lastActive}</span>
-        </div>
-      </div>
-      <div className="profile-container">
-        <h2>Profile</h2>
-        <div className="profile-box">
-          <div className="profile-label">Target</div>
-          <div className="profile-value">
-
-          </div>
-        </div>
-      </div>
+      </div>  
     </div>
   );
 
@@ -373,8 +429,6 @@ const App: React.FC = () => {
       <div className="main-content">
         {selectedDevice ? (
           renderMeasurementScreen()
-        ) : deviceProfile ? (
-          renderProfileScreen()
         ) :(
           <>
             {activeView === 'dashboard' && renderDashboard()}
@@ -383,6 +437,67 @@ const App: React.FC = () => {
           </>
         )}
       </div>
+
+      {showDeviceProfile && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Profile for {deviceProfile?.id}</h3>
+              {deviceProfile ? (
+                <div className="profile-details">
+                  <div className="form-group">
+                    <label>Kit ID:</label>
+                    <input
+                      type="text"
+                      value={deviceProfile.kitId}
+                      onChange={(e) => setDeviceProfile({ ...deviceProfile, kitId: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Min HR:</label>
+                    <input
+                      type="text"
+                      value={deviceProfile.minHR}
+                      onChange={(e) => setDeviceProfile({ ...deviceProfile, minHR: Number(e.target.value) })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Max HR:</label>
+                    <input
+                      type="text"
+                      value={deviceProfile.maxHR}
+                      onChange={(e) => setDeviceProfile({ ...deviceProfile, maxHR: Number(e.target.value) })}
+                    />
+                  </div>
+                  {/*
+                  <div className="form-group">
+                    <label>Detail URL:</label>
+                    <input
+                      type="text"
+                      value={deviceProfile.detail}
+                      onChange={(e) => setDeviceProfile({ ...deviceProfile, detail: e.target.value })}
+                    />
+                  </div>
+                  */}
+                </div>
+              ) : (
+                <div className="error-message" style={{
+                  backgroundColor: '#fee',
+                  color: '#c00',
+                  padding: '10px',
+                  borderRadius: '4px',
+                  marginBottom: '20px',
+                  border: '1px solid #fcc'
+                }}>
+                  <strong>No device profile selected.</strong>
+                </div>
+              )}
+            <div className="modal-buttons">
+              <button onClick={handleUpdateProfile}>Submit</button>
+              <button onClick={() => setShowDeviceProfile(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showAddDevice && (
         <div className="modal-overlay">

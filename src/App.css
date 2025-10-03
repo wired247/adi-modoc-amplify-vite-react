@@ -219,6 +219,16 @@ body {
   font-size: 14px;
 }
 
+.device-profile {
+  font-size: 14px;
+  padding: 8px 20px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #004985;
+  cursor: pointer;
+}
+
 /* Measurement Screen */
 .measurement-screen {
   background-color: #c6c6c6;
@@ -226,6 +236,8 @@ body {
   height: 100%;
   padding: 20px;
   border-radius: 8px;
+  display: flex;
+	flex-direction: column;
 }
 
 .measurement-header {
@@ -306,6 +318,21 @@ body {
   margin-bottom: 10px;
 }
 
+.measurement-bottom {
+  margin-top: auto;
+  padding: 10px;
+}
+
+.view-activity-button {
+  background-color: #004985;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 .status-indicator {
   display: inline-flex;
   align-items: center;
@@ -318,50 +345,6 @@ body {
 .graph {
   width: 100%;
   height: 100%;
-}
-
-/* Profile Screen */
-.profile-screen {
-  background-color: #c6c6c6;
-  color: #1a1a2e;
-  height: 100%;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.profile-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.profile-container {
-  position: relative;
-}
-
-.profile-container h2 {
-  margin-bottom: 20px;
-}
-
-.profile-box {
-  background-color: #eee;
-  border: 1px solid #aaa;
-  border-radius: 8px;
-  padding: 20px;
-  margin-top: 20px;
-}
-
-.profile-label {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #aaa;
-}
-
-.profile-value {
-  font-size: 48px;
-  font-weight: bold;
-  margin-bottom: 10px;
 }
 
 /* Modal Styles */
