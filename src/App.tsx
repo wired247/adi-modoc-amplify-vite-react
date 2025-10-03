@@ -276,6 +276,7 @@ const App: React.FC = () => {
         <table className="device-table">
           <thead>
             <tr>
+              <th>Kit</th>
               <th>Device ID</th>
               {/* <th>Status</th> */}
               <th>Heart Rate</th>
@@ -294,6 +295,7 @@ const App: React.FC = () => {
             ) : (
               devices.map(device => (
                 <tr key={device.id}>
+                  <td>{device.kitId}</td>
                   <td>
                     <button className="device-link" onClick={() => setSelectedDevice(device)}>
                       {device.id}
