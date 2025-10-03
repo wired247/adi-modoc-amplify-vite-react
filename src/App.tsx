@@ -160,7 +160,9 @@ const App: React.FC = () => {
         heartRate: 0,
         lastActive: new Date().toISOString(),
         batteryLevel: 100,
-        detail: ''
+        detail: '',
+        minHR: 70,
+        maxHR: 120
       };
 
       try {
@@ -227,7 +229,7 @@ const App: React.FC = () => {
     fileInputRef.current?.click();
   };
 
-  const openUrlInNewTab = (url) => {
+  const openUrlInNewTab = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
