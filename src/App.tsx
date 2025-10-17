@@ -1,20 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Authenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
+import { Device, HrZone } from './Modoc.types.ts';
+import DeviceDefaults from './DeviceDefaults.tsx';
+import DashboardTable from './DashboardTable.tsx';
+import DeviceProfileModal from './DeviceProfileModal.tsx';
+import MeasurementScreen from './MeasurementScreen.tsx';
 import AnalogDevicesLogo1 from "./AnalogDevicesLogo1";
 import './App.css';
 
-interface Device {
-  id: string;
-  kitId: string;
-  status: 'active' | 'standby' | 'disconnected';
-  heartRate: number;
-  lastActive: string;
-  batteryLevel: number;
-  detail: string;
-  minHR: number;
-  maxHR: number;
-}
-
-const App: React.FC = () => {
+const MainApp: React.FC = () => {
   const [activeView, setActiveView] = useState<'dashboard' | 'devices' | 'administration'>('dashboard');
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,60 +25,102 @@ const App: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const formatDate = (date: Date) => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${months[date.getMonth()]}/${date.getDate()}/${date.getFullYear()}`;
-  };
+  // Authentication state
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [authSession, setAuthSession] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   // AWS endpoint URL
   // 'https://<api-id>.execute-api.<region>.amazonaws.com/<stage>/<resource>'
   const AWS_DEVICES_ENDPOINT = 'https://hwm6t7hyy1.execute-api.us-east-1.amazonaws.com/dev/dashboard-devices';
 
-  const fetchDevices = async () => {
+  useEffect(() => {
+    fetchAuthInfo();
+  }, []);
+
+  // Fetch authentication information
+  const fetchAuthInfo = async () => {
+    try {
+      setAuthLoading(true);
+      setAuthError(null);
+      
+      const [user, session] = await Promise.all([
+        getCurrentUser(),
+        fetchAuthSession(),
+      ]);
+      
+      setAuthUser(user);
+      setAuthSession(session);
+      // console.log(authSession.tokens?.idToken?.toString())
+      fetchDevices(session);
+
+    } catch (error) {
+      console.error('Error fetching auth info:', error);
+      setAuthError(error instanceof Error ? error.message : 'Unknown auth error');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const userIsAdmin = (): boolean => {
+    // Check if the authenticated user is admin
+    // TODO: use group membership or claim in ID token?
+    if (!authUser) return false;
+    if (authUser.userId == "8428b468-5091-7062-e9ae-79f76c9d9ebc") return true;
+    return false;
+  }
+
+  const fetchDevices = async (session: any) => {
     try {
       setLoading(true);
       setError(null);
       
       // Try CORS first, fallback to no-cors if needed
       let response;
-      try {
-        response = await fetch(AWS_DEVICES_ENDPOINT, {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          credentials: 'omit'
-        });
-      } catch (corsError) {
-        console.warn('CORS request failed, trying no-cors mode:', corsError);
-        // Fallback to no-cors mode (won't be able to read response body)
-        response = await fetch(AWS_DEVICES_ENDPOINT, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-      }
-      
-      // For no-cors mode, we can't check response.ok or read JSON
-      if (response.type === 'opaque') {
-        console.info('Received opaque response (no-cors mode), using fallback data');
-        throw new Error('CORS configuration needed on server');
-      }
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      
-      // Validate that the response has the expected structure
-      if (Array.isArray(data)) {
-        setDevices(data);
-      } else if (data.devices && Array.isArray(data.devices)) {
-        setDevices(data.devices);
+      if (session != null && session.tokens != null) {
+        try {
+          response = await fetch(AWS_DEVICES_ENDPOINT, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+              'Authorization': `Bearer ${session.tokens?.idToken?.toString()}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            credentials: 'omit'
+          });
+        } catch (corsError) {
+          console.warn('CORS request failed, trying no-cors mode:', corsError);
+          // Fallback to no-cors mode (won't be able to read response body?)
+          response = await fetch(AWS_DEVICES_ENDPOINT, {
+            method: 'GET',
+            mode: 'no-cors'
+          });
+        }
+        // For no-cors mode, we can't check response.ok or read JSON
+        if (response.type === 'opaque') {
+          console.info('Received opaque response (no-cors mode), using fallback data');
+          throw new Error('CORS configuration needed on server');
+        }
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        // Validate that the response has the expected structure
+        if (Array.isArray(data)) {
+          setDevices(data);
+        } else if (data.devices && Array.isArray(data.devices)) {
+          setDevices(data.devices);
+        } else {
+          throw new Error('Invalid response format: expected array of devices');
+        }
       } else {
-        throw new Error('Invalid response format: expected array of devices');
+        console.error('missing authSession tokens', authSession);
+        throw new Error('Missing header for fetchDevices()');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -96,60 +134,11 @@ const App: React.FC = () => {
       console.error('Error fetching devices:', err);
       
       // Fallback to hardcoded data in case of error
-      setDevices([
-        {
-          "id": "ADI_Nihanth_device",
-          "kitId": "KIT001",
-          "status": "disconnected",
-          "heartRate": 82,
-          "lastActive": "2025-04-04T09:12:13",
-          "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Nihanth_device/",
-          "minHR": 78,
-          "maxHR": 120
-        },
-        {
-          "id": "ADI_Samsung_SM-A146U1",
-          "kitId": "KIT002",
-          "status": "disconnected",
-          "heartRate": 65,
-          "lastActive": "2025-04-09T16:39:16",
-          "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Samsung_SM-A146U1/",
-          "minHR": 65,
-          "maxHR": 110
-        },
-        {
-          "id": "ADI_Subash_testing",
-          "kitId": "KIT003",
-          "status": "disconnected",
-          "heartRate": 0,
-          "lastActive": "2025-04-07T05:02:57",
-          "batteryLevel": 80,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Subash_testing/",
-          "minHR": 78,
-          "maxHR": 115
-        },
-        {
-          "id": "ADI_User1_test_device",
-          "kitId": "KIT004",
-          "status": "disconnected",
-          "heartRate": 0,
-          "lastActive": "2025-08-13T09:47:29",
-          "batteryLevel": 40,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_User1_test_device/",
-          "minHR": 68,
-          "maxHR": 100
-        },
-      ]);
+      setDevices(DeviceDefaults);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchDevices();
-  }, []);
 
   const handleAddDevice = async () => {
     if (newDevice.kitId && newDevice.deviceId) {
@@ -162,7 +151,8 @@ const App: React.FC = () => {
         batteryLevel: 100,
         detail: '',
         minHR: 70,
-        maxHR: 120
+        maxHR: 120,
+        zones: []
       };
 
       try {
@@ -229,35 +219,30 @@ const App: React.FC = () => {
     fileInputRef.current?.click();
   };
 
-  const openUrlInNewTab = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
   const renderDashboard = () => (
     <div className="dashboard-view">
       <h2>Device Dashboard</h2>
       
+      {/* Amplify Authentication Information Display */}
+      {authLoading || authError && (
+        <div className="auth-info">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
+            {authLoading && (
+              <div><strong>Loading...</strong></div>
+            )}
+            {authError && (
+              <div style={{ color: '#dc3545' }}><strong>Auth Error:</strong> {authError}</div>
+            )}
+          </div>
+        </div>
+      )}
+      
       {error && (
-        <div className="error-message" style={{ 
-          backgroundColor: '#fee', 
-          color: '#c00', 
-          padding: '10px', 
-          borderRadius: '4px', 
-          marginBottom: '20px',
-          border: '1px solid #fcc'
-        }}>
+        <div className="error-message-outlined">
           <strong>Error loading devices:</strong> {error}
           <button 
-            onClick={fetchDevices} 
-            style={{ 
-              marginLeft: '10px', 
-              padding: '5px 10px', 
-              backgroundColor: '#004985', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '3px', 
-              cursor: 'pointer' 
-            }}
+            onClick={() => fetchDevices(authSession)} 
+            className="auth-retry"
           >
             Retry
           </button>
@@ -273,58 +258,12 @@ const App: React.FC = () => {
           Loading devices...
         </div>
       ) : (
-        <table className="device-table">
-          <thead>
-            <tr>
-              <th>Kit</th>
-              <th>Device ID</th>
-              {/* <th>Status</th> */}
-              <th>Heart Rate</th>
-              <th>Last Active</th>
-              <th>Battery Level</th>
-              <th>Activities</th>
-            </tr>
-          </thead>
-          <tbody>
-            {devices.length === 0 ? (
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
-                  No devices found
-                </td>
-              </tr>
-            ) : (
-              devices.map(device => (
-                <tr key={device.id}>
-                  <td>{device.kitId}</td>
-                  <td>
-                    <button className="device-link" onClick={() => setSelectedDevice(device)}>
-                      {device.id}
-                    </button>
-                  </td>
-                  {/*}
-                  <td>
-                    <div className="status-container">
-                      <span className={`status-led ${device.status}`}></span>
-                      <span>{device.status}</span>
-                    </div>
-                  </td>
-                  */}
-                  <td>{device.heartRate} bpm</td>
-                  <td>{formatDate(new Date(device.lastActive))}</td>
-                  <td>{device.batteryLevel}%</td>
-                  <td>
-                    <button className="device-profile" onClick={() => { 
-                      setDeviceProfile(device); 
-                      setShowDeviceProfile(true);
-                    }}>
-                      Update
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <DashboardTable 
+          devices={devices} 
+          setSelectedDevice={setSelectedDevice }
+          setDeviceProfile={ setDeviceProfile }
+          setShowDeviceProfile={ setShowDeviceProfile }
+        />
       )}
     </div>
   );
@@ -362,38 +301,7 @@ const App: React.FC = () => {
   );
 
   const renderMeasurementScreen = () => (
-    <div className="measurement-screen">
-      <div className="measurement-header">
-        <button className="back-button" onClick={() => setSelectedDevice(null)}>
-          ← Back
-        </button>
-        <div className="device-info">
-          <h3>{selectedDevice?.id}</h3>
-          <span>Kit: {selectedDevice?.kitId}</span>
-          <span>Battery: {selectedDevice?.batteryLevel}%</span>
-        </div>
-      </div>
-      <div className="measurements-container">
-        <h2>Measurements</h2>
-        <div className="measurement-box">
-          <div className="measurement-label">❤️ Heart Rate</div>
-          <div className="measurement-value">
-
-          </div>
-        </div>
-      </div>
-      <div className="measurement-bottom">
-        <button className="view-activity-button" onClick={() => {
-          if (selectedDevice?.detail) {
-            openUrlInNewTab(selectedDevice.detail);
-          } else {
-            alert('No detail URL available for this device.');
-          }
-        }}>
-          View All Activity
-        </button>
-      </div>  
-    </div>
+    <MeasurementScreen selectedDevice={selectedDevice} setSelectedDevice={setSelectedDevice} />
   );
 
   return (
@@ -413,19 +321,34 @@ const App: React.FC = () => {
             <span className="icon">📊</span>
             {!isCollapsed && <span>Dashboard</span>}
           </button>
+
+          {/* Admin-only links, check currentUser */}
+          {userIsAdmin() && (
+            <div>
+              <button
+                className={`nav-item ${activeView === 'devices' ? 'active' : ''}`}
+                onClick={() => { setActiveView('devices'); setSelectedDevice(null); }}
+              >
+                <span className="icon">📱</span>
+                {!isCollapsed && <span>Devices</span>}
+              </button>
+              <button
+                className={`nav-item ${activeView === 'administration' ? 'active' : ''}`}
+                onClick={() => { setActiveView('administration'); setSelectedDevice(null); }}
+              >
+                <span className="icon">⚙️</span>
+                {!isCollapsed && <span>Administration</span>}
+              </button>
+            </div>
+          )}
+
           <button
-            className={`nav-item ${activeView === 'devices' ? 'active' : ''}`}
-            onClick={() => { setActiveView('devices'); setSelectedDevice(null); }}
+            className="nav-item sign-out"
+            onClick={() => signOut()}
+            style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.2)' }}
           >
-            <span className="icon">📱</span>
-            {!isCollapsed && <span>Devices</span>}
-          </button>
-          <button
-            className={`nav-item ${activeView === 'administration' ? 'active' : ''}`}
-            onClick={() => { setActiveView('administration'); setSelectedDevice(null); }}
-          >
-            <span className="icon">⚙️</span>
-            {!isCollapsed && <span>Administration</span>}
+            <span className="icon">🚪</span>
+            {!isCollapsed && <span>Sign Out</span>}
           </button>
         </nav>
       </div>
@@ -444,62 +367,12 @@ const App: React.FC = () => {
 
       {showDeviceProfile && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3>Profile for {deviceProfile?.id}</h3>
-              {deviceProfile ? (
-                <div className="profile-details">
-                  <div className="form-group">
-                    <label>Kit ID:</label>
-                    <input
-                      type="text"
-                      value={deviceProfile.kitId}
-                      onChange={(e) => setDeviceProfile({ ...deviceProfile, kitId: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Min HR:</label>
-                    <input
-                      type="text"
-                      value={deviceProfile.minHR}
-                      onChange={(e) => setDeviceProfile({ ...deviceProfile, minHR: Number(e.target.value) })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Max HR:</label>
-                    <input
-                      type="text"
-                      value={deviceProfile.maxHR}
-                      onChange={(e) => setDeviceProfile({ ...deviceProfile, maxHR: Number(e.target.value) })}
-                    />
-                  </div>
-                  {/*
-                  <div className="form-group">
-                    <label>Detail URL:</label>
-                    <input
-                      type="text"
-                      value={deviceProfile.detail}
-                      onChange={(e) => setDeviceProfile({ ...deviceProfile, detail: e.target.value })}
-                    />
-                  </div>
-                  */}
-                </div>
-              ) : (
-                <div className="error-message" style={{
-                  backgroundColor: '#fee',
-                  color: '#c00',
-                  padding: '10px',
-                  borderRadius: '4px',
-                  marginBottom: '20px',
-                  border: '1px solid #fcc'
-                }}>
-                  <strong>No device profile selected.</strong>
-                </div>
-              )}
-            <div className="modal-buttons">
-              <button onClick={handleUpdateProfile}>Submit</button>
-              <button onClick={() => setShowDeviceProfile(false)}>Close</button>
-            </div>
-          </div>
+          <DeviceProfileModal
+            deviceProfile={deviceProfile}
+            setDeviceProfile={setDeviceProfile}
+            setShowDeviceProfile={setShowDeviceProfile}
+            handleUpdateProfile={handleUpdateProfile}
+          />
         </div>
       )}
 
@@ -561,6 +434,15 @@ const App: React.FC = () => {
         </div>
       )}
     </div>
+  );
+};
+
+// use <Authenticator hideSignUp> to disable sign up option
+const App: React.FC = () => {
+  return (
+    <Authenticator hideSignUp>
+      <MainApp />
+    </Authenticator>
   );
 };
 
