@@ -67,7 +67,10 @@ const MainApp: React.FC = () => {
     // Check if the authenticated user is admin
     // TODO: use group membership or claim in ID token?
     if (!authUser) return false;
+    // DcsSandboxUserPool Admin UserId
     if (authUser.userId == "8428b468-5091-7062-e9ae-79f76c9d9ebc") return true;
+    // amplifyAuthUserPool4BA7F805-z883FV3anyA7 User pool
+    if (authUser.userId == "d4682488-e061-70ca-360b-43a982545222") return true;
     return false;
   }
 
