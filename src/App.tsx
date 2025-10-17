@@ -150,8 +150,6 @@ const MainApp: React.FC = () => {
         lastActive: new Date().toISOString(),
         batteryLevel: 100,
         detail: '',
-        minHR: 70,
-        maxHR: 120,
         zones: []
       };
 
