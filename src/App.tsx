@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
-import { Device, HrZone } from './Modoc.types.ts';
+import { Device } from './Modoc.types.ts';
 import DeviceDefaults from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
