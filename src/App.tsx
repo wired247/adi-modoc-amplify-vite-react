@@ -52,7 +52,7 @@ const MainApp: React.FC = () => {
       
       setAuthUser(user);
       setAuthSession(session);
-      // console.log(authSession.tokens?.idToken?.toString())
+      console.log("ID token:", session.tokens?.idToken?.toString());
       fetchDevices(session);
 
     } catch (error) {
