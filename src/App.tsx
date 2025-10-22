@@ -310,17 +310,6 @@ const MainApp: React.FC = () => {
     <MeasurementScreen selectedDevice={selectedDevice} setSelectedDevice={setSelectedDevice} />
   );
 
-  const renderPrescriptionModal = () => (
-    <PrescriptionModal
-      isOpen={showPrescription}
-      onClose={() => setShowPrescription(false)}
-      onSave={(prescriptionData) => {
-        console.log('Prescription saved:', prescriptionData);
-        setShowPrescription(false);
-      }}
-    />
-  );
-
   return (
     <div className="app">
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}> 
@@ -396,6 +385,7 @@ const MainApp: React.FC = () => {
       {showPrescription && (
         <div className="modal-overlay">
           <PrescriptionModal
+            deviceProfile={deviceProfile}
             isOpen={showPrescription}
             onClose={() => setShowPrescription(false)}
             onSave={(prescriptionData) => {
