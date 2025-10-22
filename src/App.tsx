@@ -7,6 +7,7 @@ import DeviceDefaults from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
+import PrescriptionModal from './PrescriptionModal.tsx';
 import AnalogDevicesLogo1 from "./AnalogDevicesLogo1";
 import './App.css';
 
@@ -22,6 +23,7 @@ const MainApp: React.FC = () => {
   const [selectedForDeletion, setSelectedForDeletion] = useState<string[]>([]);
   const [deviceProfile, setDeviceProfile] = useState<Device | null>(null);
   const [showDeviceProfile, setShowDeviceProfile] = useState(false);
+  const [showPrescription, setShowPrescription] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -154,7 +156,8 @@ const MainApp: React.FC = () => {
         lastActive: new Date().toISOString(),
         batteryLevel: 100,
         detail: '',
-        zones: []
+        zones: [],
+        hrValues: []
       };
 
       try {
@@ -265,6 +268,7 @@ const MainApp: React.FC = () => {
           setSelectedDevice={setSelectedDevice }
           setDeviceProfile={ setDeviceProfile }
           setShowDeviceProfile={ setShowDeviceProfile }
+          setShowPrescription={ setShowPrescription }
         />
       )}
     </div>
@@ -304,6 +308,17 @@ const MainApp: React.FC = () => {
 
   const renderMeasurementScreen = () => (
     <MeasurementScreen selectedDevice={selectedDevice} setSelectedDevice={setSelectedDevice} />
+  );
+
+  const renderPrescriptionModal = () => (
+    <PrescriptionModal
+      isOpen={showPrescription}
+      onClose={() => setShowPrescription(false)}
+      onSave={(prescriptionData) => {
+        console.log('Prescription saved:', prescriptionData);
+        setShowPrescription(false);
+      }}
+    />
   );
 
   return (
@@ -374,6 +389,19 @@ const MainApp: React.FC = () => {
             setDeviceProfile={setDeviceProfile}
             setShowDeviceProfile={setShowDeviceProfile}
             handleUpdateProfile={handleUpdateProfile}
+          />
+        </div>
+      )}
+
+      {showPrescription && (
+        <div className="modal-overlay">
+          <PrescriptionModal
+            isOpen={showPrescription}
+            onClose={() => setShowPrescription(false)}
+            onSave={(prescriptionData) => {
+              console.log('Prescription saved:', prescriptionData);
+              setShowPrescription(false);
+            }}
           />
         </div>
       )}

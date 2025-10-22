@@ -7,7 +7,8 @@ const DashboardTable: React.FC<{
   setSelectedDevice: React.Dispatch<React.SetStateAction<Device | null>>;
   setDeviceProfile: React.Dispatch<React.SetStateAction<Device | null>>;
   setShowDeviceProfile: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ devices, setSelectedDevice, setDeviceProfile, setShowDeviceProfile }) => {
+  setShowPrescription: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ devices, setSelectedDevice, setDeviceProfile, setShowDeviceProfile, setShowPrescription }) => {
 
     const formatDate = (date: Date) => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -68,7 +69,7 @@ const DashboardTable: React.FC<{
                   <td>
                     <button className="device-profile" onClick={() => { 
                       setDeviceProfile(device); 
-                      setShowDeviceProfile(true);
+                      setShowPrescription(true);
                     }}>
                       Update
                     </button>
