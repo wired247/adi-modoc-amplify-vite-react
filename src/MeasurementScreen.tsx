@@ -99,7 +99,12 @@ const MeasurementScreen: React.FC<{
           <div className="measurement-label">❤️ Heart Rate</div>
           <div className="measurement-value">
             <ResponsiveLine 
-              data={hrData}
+              data={[
+                {
+                  id: "heartRate_1",
+                  data: selectedDevice?.hrValues || hrData[0].data
+                }
+              ]}
               yScale={{ type: 'linear', min: 0, max: 'auto', stacked: true, reverse: false }}
               curve='natural'
               useMesh={true}

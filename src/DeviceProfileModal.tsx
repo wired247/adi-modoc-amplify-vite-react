@@ -9,7 +9,7 @@ const DeviceProfileModal: React.FC<{
 }> = ({ deviceProfile, setDeviceProfile, setShowDeviceProfile, handleUpdateProfile }) =>  {
   return (
     <div className="modal">
-        <h3>Goals for {deviceProfile?.kitId}</h3>
+        <h3>Zone Thresholds for {deviceProfile?.id}</h3>
             {deviceProfile ? (
             <div className="profile-details">
                 {/*
@@ -44,7 +44,7 @@ const DeviceProfileModal: React.FC<{
                                 style={{ width: '100%' }}
                             />
                         </div>
-                        <span className="profile-captions">for 20 seconds</span>
+                        {/* <span className="profile-captions">for 20 seconds</span> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -69,7 +69,7 @@ const DeviceProfileModal: React.FC<{
                                 style={{ width: '100%' }}
                             />
                         </div>
-                        <span className="profile-captions"> for 30 seconds</span>
+                        {/* <span className="profile-captions"> for 30 seconds</span> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -94,7 +94,7 @@ const DeviceProfileModal: React.FC<{
                                 style={{ width: '100%' }}
                             />
                         </div>
-                        <span className="profile-captions"> for 20 seconds</span>
+                        {/* <span className="profile-captions"> for 20 seconds</span> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -119,7 +119,7 @@ const DeviceProfileModal: React.FC<{
                                 style={{ width: '100%' }}
                             />
                         </div>
-                        <span className="profile-captions"> for 30 seconds</span>
+                        {/* <span className="profile-captions"> for 30 seconds</span> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -144,7 +144,7 @@ const DeviceProfileModal: React.FC<{
                             style={{ width: '100%' }}
                         />
                         </div>
-                        <span className="profile-captions">for 20 seconds</span>
+                        {/* <span className="profile-captions">for 20 seconds</span> */}
                     </div>
                 </div>
                 {/*

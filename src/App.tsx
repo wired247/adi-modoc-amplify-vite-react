@@ -33,7 +33,8 @@ const MainApp: React.FC = () => {
 
   // AWS endpoint URL
   // 'https://<api-id>.execute-api.<region>.amazonaws.com/<stage>/<resource>'
-  const AWS_DEVICES_ENDPOINT = 'https://hwm6t7hyy1.execute-api.us-east-1.amazonaws.com/dev/dashboard-devices';
+  // const AWS_DEVICES_ENDPOINT = 'https://hwm6t7hyy1.execute-api.us-east-1.amazonaws.com/dev/dashboard-devices';
+  const AWS_DEVICES_ENDPOINT = 'https://x4oa3j9zc8.execute-api.us-east-1.amazonaws.com/test/dashboard-devices';
 
   useEffect(() => {
     fetchAuthInfo();
@@ -52,7 +53,7 @@ const MainApp: React.FC = () => {
       
       setAuthUser(user);
       setAuthSession(session);
-      console.log("ID token:", session.tokens?.idToken?.toString());
+      // console.log("ID token:", session.tokens?.idToken?.toString());
       fetchDevices(session);
 
     } catch (error) {

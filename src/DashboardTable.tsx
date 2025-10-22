@@ -19,12 +19,13 @@ const DashboardTable: React.FC<{
           <thead>
             <tr>
               <th>Kit</th>
-              <th>Device ID</th>
+              <th>User ID</th>
               {/* <th>Status</th> */}
-              <th>Heart Rate</th>
+              <th>Avg. Heart Rate</th>
               <th>Last Active</th>
-              <th>Battery Level</th>
-              <th>Activities</th>
+              {/* <th>Battery Level</th> */}
+              <th>Thresholds</th>
+              <th>Prescription</th>
             </tr>
           </thead>
           <tbody>
@@ -53,7 +54,17 @@ const DashboardTable: React.FC<{
                   */}
                   <td>{device.heartRate} bpm</td>
                   <td>{formatDate(new Date(device.lastActive))}</td>
+                  {/*}
                   <td>{device.batteryLevel}%</td>
+                  */}
+                  <td>
+                    <button className="device-profile" onClick={() => {
+                      setDeviceProfile(device);
+                      setShowDeviceProfile(true);
+                    }}>
+                      Update
+                    </button>
+                  </td>
                   <td>
                     <button className="device-profile" onClick={() => { 
                       setDeviceProfile(device); 

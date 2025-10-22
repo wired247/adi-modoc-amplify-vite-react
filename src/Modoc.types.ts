@@ -7,6 +7,7 @@ export interface Device {
   batteryLevel: number;
   detail: string;
   zones: HrZone[];
+  hrValues: { x: number; y: number }[];
 }
 
 export interface HrZone {

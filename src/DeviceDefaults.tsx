@@ -3,60 +3,12 @@ import { Device } from './Modoc.types';
 // Default device data for initial state or testing
 const DeviceDefaults: Device[] = [
         {
-          "id": "ADI_Nihanth_device",
+          "id": "User 1",
           "kitId": "KIT001",
           "status": "disconnected",
-          "heartRate": 82,
-          "lastActive": "2025-04-04T09:12:13",
+          "heartRate": 74,
+          "lastActive": "2025-10-21 16:30:28",
           "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Nihanth_device/",
-          "zones": [
-            { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
-            { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-            { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
-            { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
-            { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
-          ]
-        },
-        {
-          "id": "ADI_Samsung_SM-A146U1",
-          "kitId": "KIT002",
-          "status": "disconnected",
-          "heartRate": 65,
-          "lastActive": "2025-04-09T16:39:16",
-          "batteryLevel": 50,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Samsung_SM-A146U1/",
-          "zones": [
-            { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
-            { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-            { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
-            { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
-            { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
-          ]
-        },
-        {
-          "id": "ADI_Subash_testing",
-          "kitId": "KIT003",
-          "status": "disconnected",
-          "heartRate": 0,
-          "lastActive": "2025-04-07T05:02:57",
-          "batteryLevel": 80,
-          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Subash_testing/",
-          "zones": [
-            { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
-            { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-            { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
-            { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
-            { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
-          ]
-        },
-        {
-          "id": "ADI_User1_test_device",
-          "kitId": "KIT004",
-          "status": "disconnected",
-          "heartRate": 0,
-          "lastActive": "2025-08-13T09:47:29",
-          "batteryLevel": 40,
           "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_User1_test_device/",
           "zones": [
             { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
@@ -64,6 +16,93 @@ const DeviceDefaults: Device[] = [
             { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
             { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
             { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
+          ],
+          "hrValues": [
+            {"x": 0, "y": 88}, {"x": 2, "y": 92}, {"x": 4, "y": 98}, {"x": 6, "y": 102},
+            {"x": 8, "y": 102}, {"x": 10, "y": 104}, {"x": 12, "y": 104}, {"x": 14, "y": 104},
+            {"x": 16, "y": 100}, {"x": 18, "y": 99}, {"x": 20, "y": 103}, {"x": 22, "y": 104},
+            {"x": 24, "y": 103}, {"x": 26, "y": 102}, {"x": 28, "y": 97}, {"x": 30, "y": 93},
+            {"x": 32, "y": 89}, {"x": 34, "y": 86}, {"x": 36, "y": 83}, {"x": 38, "y": 79},
+            {"x": 40, "y": 76}, {"x": 42, "y": 72}, {"x": 44, "y": 67}, {"x": 45, "y": 63},
+            {"x": 47, "y": 60}, {"x": 49, "y": 59}, {"x": 51, "y": 59}, {"x": 53, "y": 60},
+            {"x": 55, "y": 60}, {"x": 57, "y": 61}, {"x": 59, "y": 61}, {"x": 61, "y": 62},
+            {"x": 63, "y": 63}, {"x": 65, "y": 62}, {"x": 67, "y": 62}, {"x": 69, "y": 62},
+            {"x": 71, "y": 63}, {"x": 73, "y": 63}, {"x": 75, "y": 64}, {"x": 77, "y": 65},
+            {"x": 79, "y": 64}, {"x": 81, "y": 64}, {"x": 83, "y": 63}, {"x": 85, "y": 63},
+            {"x": 87, "y": 62}, {"x": 89, "y": 62}, {"x": 91, "y": 62}, {"x": 93, "y": 62},
+            {"x": 95, "y": 62}, {"x": 97, "y": 61}, {"x": 99, "y": 61}, {"x": 101, "y": 62},
+            {"x": 103, "y": 62}, {"x": 105, "y": 62}, {"x": 107, "y": 63}, {"x": 109, "y": 65},
+            {"x": 111, "y": 65}, {"x": 113, "y": 65}, {"x": 115, "y": 66}, {"x": 117, "y": 66},
+            {"x": 119, "y": 65}, {"x": 121, "y": 65}
+          ]
+        },
+        {
+          "id": "User 2",
+          "kitId": "KIT002",
+          "status": "disconnected",
+          "heartRate": 70,
+          "lastActive": "2025-10-21 17:45:18",
+          "batteryLevel": 50,
+          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_User2_device/",
+          "zones": [
+            { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
+            { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
+            { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
+            { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
+            { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
+          ],
+          "hrValues": [
+            {"x": 0, "y": 69}, {"x": 2, "y": 69}, {"x": 2, "y": 69}, {"x": 4, "y": 69},
+            {"x": 4, "y": 69}, {"x": 6, "y": 68}, {"x": 8, "y": 67}, {"x": 10, "y": 66},
+            {"x": 12, "y": 66}, {"x": 14, "y": 66}, {"x": 16, "y": 66}, {"x": 16, "y": 66},
+            {"x": 18, "y": 66}, {"x": 20, "y": 66}, {"x": 22, "y": 66}, {"x": 24, "y": 66},
+            {"x": 26, "y": 66}, {"x": 28, "y": 66}, {"x": 30, "y": 66}, {"x": 32, "y": 66},
+            {"x": 34, "y": 65}, {"x": 36, "y": 65}, {"x": 38, "y": 65}, {"x": 40, "y": 65},
+            {"x": 42, "y": 66}, {"x": 44, "y": 67}, {"x": 46, "y": 68}, {"x": 48, "y": 68},
+            {"x": 50, "y": 68}, {"x": 52, "y": 69}, {"x": 54, "y": 70}, {"x": 56, "y": 70},
+            {"x": 58, "y": 71}, {"x": 60, "y": 70}, {"x": 62, "y": 71}, {"x": 64, "y": 71},
+            {"x": 66, "y": 72}, {"x": 68, "y": 72}, {"x": 70, "y": 72}, {"x": 72, "y": 73},
+            {"x": 74, "y": 73}, {"x": 76, "y": 74}, {"x": 76, "y": 76}, {"x": 78, "y": 77},
+            {"x": 80, "y": 78}, {"x": 82, "y": 76}, {"x": 84, "y": 76}, {"x": 86, "y": 78},
+            {"x": 88, "y": 78}, {"x": 90, "y": 76}, {"x": 92, "y": 75}, {"x": 94, "y": 74},
+            {"x": 96, "y": 73}, {"x": 98, "y": 73}, {"x": 100, "y": 73}, {"x": 102, "y": 73},
+            {"x": 104, "y": 72}, {"x": 106, "y": 72}, {"x": 108, "y": 72}, {"x": 110, "y": 72},
+            {"x": 112, "y": 72}, {"x": 114, "y": 73}, {"x": 116, "y": 73}, {"x": 118, "y": 72},
+            {"x": 120, "y": 71}
+          ]
+        },
+        {
+          "id": "User 3",
+          "kitId": "KIT003",
+          "status": "disconnected",
+          "heartRate": 82,
+          "lastActive": "2025-10-21 18:27:45",
+          "batteryLevel": 80,
+          "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_user3_device/",
+          "zones": [
+            { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
+            { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
+            { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
+            { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
+            { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
+          ],
+          "hrValues": [
+            {"x": 0, "y": 93}, {"x": 2, "y": 99}, {"x": 4, "y": 103}, {"x": 6, "y": 105},
+            {"x": 8, "y": 106}, {"x": 10, "y": 105}, {"x": 12, "y": 105}, {"x": 14, "y": 107},
+            {"x": 16, "y": 108}, {"x": 18, "y": 105}, {"x": 20, "y": 102}, {"x": 22, "y": 101},
+            {"x": 24, "y": 96}, {"x": 26, "y": 96}, {"x": 28, "y": 91}, {"x": 30, "y": 89},
+            {"x": 32, "y": 89}, {"x": 34, "y": 88}, {"x": 36, "y": 89}, {"x": 38, "y": 88},
+            {"x": 40, "y": 88}, {"x": 42, "y": 86}, {"x": 44, "y": 85}, {"x": 46, "y": 86},
+            {"x": 48, "y": 85}, {"x": 50, "y": 84}, {"x": 52, "y": 83}, {"x": 54, "y": 84},
+            {"x": 55, "y": 83}, {"x": 57, "y": 79}, {"x": 59, "y": 77}, {"x": 61, "y": 75},
+            {"x": 63, "y": 73}, {"x": 65, "y": 72}, {"x": 67, "y": 72}, {"x": 69, "y": 71},
+            {"x": 71, "y": 70}, {"x": 73, "y": 70}, {"x": 75, "y": 70}, {"x": 77, "y": 71},
+            {"x": 79, "y": 71}, {"x": 81, "y": 72}, {"x": 83, "y": 73}, {"x": 85, "y": 74},
+            {"x": 87, "y": 74}, {"x": 89, "y": 73}, {"x": 91, "y": 73}, {"x": 93, "y": 72},
+            {"x": 95, "y": 70}, {"x": 97, "y": 69}, {"x": 99, "y": 68}, {"x": 101, "y": 68},
+            {"x": 103, "y": 68}, {"x": 105, "y": 68}, {"x": 107, "y": 68}, {"x": 109, "y": 68},
+            {"x": 111, "y": 68}, {"x": 113, "y": 68}, {"x": 115, "y": 68}, {"x": 117, "y": 69},
+            {"x": 119, "y": 68}
           ]
         },
       ];
