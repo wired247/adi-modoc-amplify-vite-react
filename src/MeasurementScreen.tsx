@@ -9,8 +9,9 @@ const MeasurementScreen: React.FC<{
     setShowChooseDate: (show: boolean) => void;
 }> = ({ selectedDevice, setSelectedDevice, setShowChooseDate }) => {
 
-    const [currentMeasurementValues, setMeasurementValues] = useState<Array<any>>(selectedDevice?.hrValues || DefaultHrData);
-    const [currentMeasurementDate, setMeasurementDate] = useState<string>(selectedDevice?.lastActive || '');
+    const [currentDevice, setCurrentDevice] = useState<Device | null>(selectedDevice);
+    const [currentMeasurementValues, setMeasurementValues] = useState<Array<any>>(currentDevice?.hrValues || DefaultHrData);
+    const [currentMeasurementDate, setMeasurementDate] = useState<string>(currentDevice?.lastActive || '');
 
     const formatDate = (date: Date) => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -30,8 +31,8 @@ const MeasurementScreen: React.FC<{
           ← Back
         </button>
         <div className="device-info">
-          <h3>{selectedDevice?.id}</h3>
-          <span>Kit: {selectedDevice?.kitId}</span>
+          <h3>{currentDevice?.id}</h3>
+          <span>Kit: {currentDevice?.kitId}</span>
           <span>Date: {currentMeasurementDate.length > 0 && formatDate(new Date(currentMeasurementDate))}</span>
         </div>
       </div>
@@ -63,17 +64,16 @@ const MeasurementScreen: React.FC<{
         </div>
       </div>
       <div className="measurement-bottom">
-        <button className="view-activity-button" onClick={() => {
-          if (selectedDevice?.pastMeasurements && selectedDevice.pastMeasurements.length > 0) {
+        {/* Show the button only if there are past measurements */}
+        { selectedDevice?.pastMeasurements && selectedDevice.pastMeasurements.length > 1 && (
+          <button className="view-activity-button" onClick={() => {
             // loadPastMeasurements(selectedDevice.pastMeasurements);
             setShowChooseDate(true);
-          } else {
-            alert('No detail URL available for this device.');
-          }
-        }}>
+          }}>
           View All Activity
         </button>
-      </div>  
+        )}
+      </div>
     </div>
   );
 };

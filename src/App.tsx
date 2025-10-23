@@ -3,7 +3,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
 import { Device } from './Modoc.types.ts';
-import { DeviceDefaults } from './DeviceDefaults.tsx';
+import { DefaultHrData, DeviceDefaults } from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
@@ -381,10 +381,13 @@ const MainApp: React.FC = () => {
       {showChooseDate && (
         <div className="modal-overlay">
           <ChooseDateModal
-            deviceProfile={deviceProfile}
-            setDeviceProfile={setDeviceProfile}
-            setShowDeviceProfile={setShowDeviceProfile}
-            handleChooseDate={() => setShowChooseDate(false)}
+            deviceProfile={selectedDevice}
+            setShowChooseDate={setShowChooseDate}
+            handleChooseDate={(key: string) => {
+              console.log(`Chosen S3 key: ${key}`);
+              selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: DefaultHrData });
+              setShowChooseDate(false);
+            }}
           />
         </div>
       )}
