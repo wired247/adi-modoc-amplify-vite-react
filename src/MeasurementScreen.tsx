@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import { Device } from './Modoc.types';
 import { DefaultHrData } from './DeviceDefaults';
@@ -12,6 +12,13 @@ const MeasurementScreen: React.FC<{
     const [currentDevice, setCurrentDevice] = useState<Device | null>(selectedDevice);
     const [currentMeasurementValues, setMeasurementValues] = useState<Array<any>>(currentDevice?.hrValues || DefaultHrData);
     const [currentMeasurementDate, setMeasurementDate] = useState<string>(currentDevice?.lastActive || '');
+
+    // Update local state when selectedDevice changes
+    useEffect(() => {
+        setCurrentDevice(selectedDevice);
+        setMeasurementValues(selectedDevice?.hrValues || DefaultHrData);
+        setMeasurementDate(selectedDevice?.lastActive || '');
+    }, [selectedDevice]);
 
     const formatDate = (date: Date) => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
