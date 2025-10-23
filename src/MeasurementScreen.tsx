@@ -25,12 +25,6 @@ const MeasurementScreen: React.FC<{
         return `${months[date.getMonth()]}/${date.getDate()}/${date.getFullYear()}`;
     };
 
-    const loadPastMeasurements = (links: Array<any>) => {
-        console.log(`Loading past measurements from: ${links.length} entries`);
-        setMeasurementValues(DefaultHrData);
-        // TODO: also setMeasurementDate
-    };
-
     return (
     <div className="measurement-screen">
       <div className="measurement-header">
@@ -74,7 +68,6 @@ const MeasurementScreen: React.FC<{
         {/* Show the button only if there are past measurements */}
         { selectedDevice?.pastMeasurements && selectedDevice.pastMeasurements.length > 1 && (
           <button className="view-activity-button" onClick={() => {
-            // loadPastMeasurements(selectedDevice.pastMeasurements);
             setShowChooseDate(true);
           }}>
           View All Activity
