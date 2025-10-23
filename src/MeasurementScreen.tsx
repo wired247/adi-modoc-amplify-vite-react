@@ -1,85 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import { Device } from './Modoc.types';
+import { DefaultHrData } from './DeviceDefaults';
 
-const MeasurementScreen: React.FC<{ 
+const MeasurementScreen: React.FC<{
     selectedDevice: Device | null; 
-    setSelectedDevice: (device: Device | null) => void; 
-}> = ({ selectedDevice, setSelectedDevice }) => {
+    setSelectedDevice: (device: Device | null) => void;
+    setShowChooseDate: (show: boolean) => void;
+}> = ({ selectedDevice, setSelectedDevice, setShowChooseDate }) => {
 
-    function openUrlInNewTab(detail: string) {
-        window.open(detail, '_blank', 'noopener,noreferrer');
-    }
-    const hrData = [
-      {
-        id: "heartRate_1",
-        data: [
-            { x: 0, y: 88 },
-            { x: 2, y: 90 },
-            { x: 4, y: 93 },
-            { x: 6, y: 94 },
-            { x: 8, y: 95 },
-            { x: 10, y: 98 },
-            { x: 12, y: 102 },
-            { x: 14, y: 103 },
-            { x: 16, y: 102 },
-            { x: 18, y: 101 },
-            { x: 20, y: 98 },
-            { x: 22, y: 96 },
-            { x: 24, y: 93 },
-            { x: 26, y: 90 },
-            { x: 28, y: 90 },
-            { x: 30, y: 90 },
-            { x: 32, y: 90 },
-            { x: 34, y: 90 },
-            { x: 36, y: 91 },
-            { x: 38, y: 92 },
-            { x: 40, y: 91 },
-            { x: 42, y: 90 },
-            { x: 44, y: 90 },
-            { x: 46, y: 92 },
-            { x: 48, y: 96 },
-            { x: 50, y: 102 },
-            { x: 52, y: 106 },
-            { x: 54, y: 104 },
-            { x: 56, y: 102 },
-            { x: 58, y: 99 },
-            { x: 60, y: 97 },
-            { x: 62, y: 96 },
-            { x: 64, y: 96 },
-            { x: 68, y: 96 },
-            { x: 70, y: 96 },
-            { x: 72, y: 94 },
-            { x: 74, y: 96 },
-            { x: 76, y: 95 },
-            { x: 78, y: 94 },
-            { x: 80, y: 94 },
-            { x: 82, y: 92 },
-            { x: 84, y: 94 },
-            { x: 86, y: 97 },
-            { x: 88, y: 96 },
-            { x: 90, y: 92 },
-            { x: 92, y: 82 },
-            { x: 94, y: 77 },
-            { x: 96, y: 74 },
-            { x: 98, y: 73 },
-            { x: 100, y: 77 },
-            { x: 102, y: 82 },
-            { x: 104, y: 88 },
-            { x: 106, y: 91 },
-            { x: 108, y: 92 },
-            { x: 110, y: 95 },
-            { x: 112, y: 94 },
-            { x: 114, y: 90 },
-            { x: 116, y: 88 },
-            { x: 118, y: 88 },
-            { x: 120, y: 89 },
-            { x: 122, y: 91 },
-            { x: 124, y: 92 },
-            { x: 128, y: 91 }
-        ]
-      }
-    ]
+    const [currentMeasurementValues, setMeasurementValues] = useState<Array<any>>(selectedDevice?.hrValues || DefaultHrData);
+    const [currentMeasurementDate, setMeasurementDate] = useState<string>(selectedDevice?.lastActive || '');
+
+    const formatDate = (date: Date) => {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return `${months[date.getMonth()]}/${date.getDate()}/${date.getFullYear()}`;
+    };
+
+    const loadPastMeasurements = (links: Array<any>) => {
+        console.log(`Loading past measurements from: ${links.length} entries`);
+        setMeasurementValues(DefaultHrData);
+        // TODO: also setMeasurementDate
+    };
 
     return (
     <div className="measurement-screen">
@@ -90,7 +32,7 @@ const MeasurementScreen: React.FC<{
         <div className="device-info">
           <h3>{selectedDevice?.id}</h3>
           <span>Kit: {selectedDevice?.kitId}</span>
-          <span>Battery: {selectedDevice?.batteryLevel}%</span>
+          <span>Date: {currentMeasurementDate.length > 0 && formatDate(new Date(currentMeasurementDate))}</span>
         </div>
       </div>
       <div className="measurements-container">
@@ -102,7 +44,7 @@ const MeasurementScreen: React.FC<{
               data={[
                 {
                   id: "heartRate_1",
-                  data: selectedDevice?.hrValues || hrData[0].data
+                  data: currentMeasurementValues
                 }
               ]}
               yScale={{ type: 'linear', min: 0, max: 'auto', stacked: true, reverse: false }}
@@ -122,8 +64,9 @@ const MeasurementScreen: React.FC<{
       </div>
       <div className="measurement-bottom">
         <button className="view-activity-button" onClick={() => {
-          if (selectedDevice?.detail) {
-            openUrlInNewTab(selectedDevice.detail);
+          if (selectedDevice?.pastMeasurements && selectedDevice.pastMeasurements.length > 0) {
+            // loadPastMeasurements(selectedDevice.pastMeasurements);
+            setShowChooseDate(true);
           } else {
             alert('No detail URL available for this device.');
           }

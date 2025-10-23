@@ -8,6 +8,7 @@ export interface Device {
   detail: string;
   zones: HrZone[];
   hrValues: { x: number; y: number }[];
+  pastMeasurements: { date: string; key: string; }[];
 }
 
 export interface HrZone {
@@ -25,9 +26,9 @@ export interface Kit {
 }
 
 export enum zoneChoice {
-  Zone1 = "zone1",
-  Zone2 = "zone2",
-  Zone3 = "zone3",
-  Zone4 = "zone4",
-  Zone5 = "zone5"
+  Zone1 = "Zone 1",
+  Zone2 = "Zone 2",
+  Zone3 = "Zone 3",
+  Zone4 = "Zone 4",
+  Zone5 = "Zone 5"
 }

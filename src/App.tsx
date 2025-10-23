@@ -3,11 +3,12 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
 import { Device } from './Modoc.types.ts';
-import DeviceDefaults from './DeviceDefaults.tsx';
+import { DeviceDefaults } from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
 import PrescriptionModal from './PrescriptionModal.tsx';
+import ChooseDateModal from './ChooseDateModal.tsx';
 import AnalogDevicesLogo1 from "./AnalogDevicesLogo1";
 import './App.css';
 
@@ -24,6 +25,7 @@ const MainApp: React.FC = () => {
   const [deviceProfile, setDeviceProfile] = useState<Device | null>(null);
   const [showDeviceProfile, setShowDeviceProfile] = useState(false);
   const [showPrescription, setShowPrescription] = useState(false);
+  const [showChooseDate, setShowChooseDate] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,8 +37,8 @@ const MainApp: React.FC = () => {
 
   // AWS endpoint URL
   // 'https://<api-id>.execute-api.<region>.amazonaws.com/<stage>/<resource>'
-  // const AWS_DEVICES_ENDPOINT = 'https://hwm6t7hyy1.execute-api.us-east-1.amazonaws.com/dev/dashboard-devices';
-  const AWS_DEVICES_ENDPOINT = 'https://x4oa3j9zc8.execute-api.us-east-1.amazonaws.com/test/dashboard-devices';
+  const AWS_DEVICES_ENDPOINT = 'https://hwm6t7hyy1.execute-api.us-east-1.amazonaws.com/dev/dashboard-devices';
+  // const AWS_DEVICES_ENDPOINT = 'https://x4oa3j9zc8.execute-api.us-east-1.amazonaws.com/test/dashboard-devices';
 
   useEffect(() => {
     fetchAuthInfo();
@@ -157,7 +159,8 @@ const MainApp: React.FC = () => {
         batteryLevel: 100,
         detail: '',
         zones: [],
-        hrValues: []
+        hrValues: [],
+        pastMeasurements: []
       };
 
       try {
@@ -307,7 +310,11 @@ const MainApp: React.FC = () => {
   );
 
   const renderMeasurementScreen = () => (
-    <MeasurementScreen selectedDevice={selectedDevice} setSelectedDevice={setSelectedDevice} />
+    <MeasurementScreen 
+      selectedDevice={selectedDevice} 
+      setSelectedDevice={setSelectedDevice}
+      setShowChooseDate={setShowChooseDate}
+    />
   );
 
   return (
@@ -370,6 +377,17 @@ const MainApp: React.FC = () => {
           </>
         )}
       </div>
+
+      {showChooseDate && (
+        <div className="modal-overlay">
+          <ChooseDateModal
+            deviceProfile={deviceProfile}
+            setDeviceProfile={setDeviceProfile}
+            setShowDeviceProfile={setShowDeviceProfile}
+            handleChooseDate={() => setShowChooseDate(false)}
+          />
+        </div>
+      )}
 
       {showDeviceProfile && (
         <div className="modal-overlay">
