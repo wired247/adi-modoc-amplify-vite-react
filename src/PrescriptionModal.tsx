@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Device } from './Modoc.types';
-// import './PrescriptionModal.css';
+import { Device, zoneChoice } from './Modoc.types';
 
 interface PrescriptionModalProps {
     deviceProfile: Device | null;
@@ -16,14 +15,27 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
     onSave
 }) => {
     const [formData, setFormData] = useState({
-        patientName: '',
-        medication: '',
-        dosage: '',
-        frequency: '',
-        duration: '',
+        first: zoneChoice.Zone1,
+        second: zoneChoice.Zone2,
+        third: zoneChoice.Zone4,
+        fourth: zoneChoice.Zone2,
+        fifth: zoneChoice.Zone1,
+        firstDuration: 20,
+        secondDuration: 20,
+        thirdDuration: 30,
+        fourthDuration: 20,
+        fifthDuration: 30
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -37,6 +49,10 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
         onClose();
     };
 
+    const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      handleSelectChange(event);
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -46,59 +62,124 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
             <form onSubmit={handleSubmit}>
                 <div className="prescription-details">
                     <div className="form-group">
-                        <label htmlFor="patientName">Patient Name</label>
-                        <input
-                            type="text"
-                            id="patientName"
-                            name="patientName"
-                            value={formData.patientName}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <div style={{ flex: 1 }}>
+                                <select id="first" name="first" className="prescription-select" 
+                                    value={formData.first} onChange={handleSelectChange} >
+                                    {Object.values(zoneChoice).map(zone => (
+                                        <option key={zone} value={zone}>{zone}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <span className="prescription-captions">for</span>
+                            <div style={{ flex: 1 }}>
+                                <input
+                                    type="number"
+                                    id="firstDuration"
+                                    name="firstDuration"
+                                    value={formData.firstDuration}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>seconds</div>
+                        </div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="medication">Medication</label>
-                        <input
-                            type="text"
-                            id="medication"
-                            name="medication"
-                            value={formData.medication}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <div style={{ flex: 1 }}>
+                                <select id="second" name="second" className="prescription-select"
+                                    value={formData.second} onChange={handleSelectChange} >
+                                    {Object.values(zoneChoice).map(zone => (
+                                        <option key={zone} value={zone}>{zone}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <span className="prescription-captions">for</span>
+                            <div style={{ flex: 1 }}>
+                                <input
+                                    type="number"
+                                    id="secondDuration"
+                                    name="secondDuration"
+                                    value={formData.secondDuration}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>seconds</div>
+                        </div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="dosage">Dosage</label>
-                        <input
-                            type="text"
-                            id="dosage"
-                            name="dosage"
-                            value={formData.dosage}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <div style={{ flex: 1 }}>
+                                <select id="third" name="third" className="prescription-select"
+                                    value={formData.third} onChange={handleSelectChange} >
+                                    {Object.values(zoneChoice).map(zone => (
+                                        <option key={zone} value={zone}>{zone}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <span className="prescription-captions">for</span>
+                            <div style={{ flex: 1 }}>
+                                <input
+                                    type="number"
+                                    id="thirdDuration"
+                                    name="thirdDuration"
+                                    value={formData.thirdDuration}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>seconds</div>
+                        </div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="frequency">Frequency</label>
-                        <input
-                            type="text"
-                            id="frequency"
-                            name="frequency"
-                            value={formData.frequency}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <div style={{ flex: 1 }}>
+                                <select id="fourth" name="fourth" className="prescription-select"
+                                    value={formData.fourth} onChange={handleSelectChange} >
+                                    {Object.values(zoneChoice).map(zone => (
+                                        <option key={zone} value={zone}>{zone}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <span className="prescription-captions">for</span>
+                            <div style={{ flex: 1 }}>
+                                <input
+                                    type="number"
+                                    id="fourthDuration"
+                                    name="fourthDuration"
+                                    value={formData.fourthDuration}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>seconds</div>
+                        </div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="duration">Duration</label>
-                        <input
-                            type="text"
-                            id="duration"
-                            name="duration"
-                            value={formData.duration}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <div style={{ flex: 1 }}>
+                                <select id="fifth" name="fifth" className="prescription-select"
+                                    value={formData.fifth} onChange={handleSelectChange} >
+                                    {Object.values(zoneChoice).map(zone => (
+                                        <option key={zone} value={zone}>{zone}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <span className="prescription-captions">for</span>
+                            <div style={{ flex: 1 }}>
+                                <input
+                                    type="number"
+                                    id="fifthDuration"
+                                    name="fifthDuration"
+                                    value={formData.fifthDuration}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>seconds</div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -108,11 +189,11 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
             </div>
             )}
             <div className="modal-buttons">
-                <button type="button" className="cancel-button" onClick={onClose}>
-                    Cancel
-                </button>
                 <button type="submit" className="save-button">
                     Save Prescription
+                </button>
+                <button type="button" className="cancel-button" onClick={onClose}>
+                    Cancel
                 </button>
             </div>
         </div>

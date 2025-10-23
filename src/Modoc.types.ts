@@ -23,3 +23,11 @@ export interface Kit {
   owner: string;
   device: Device | null;
 }
+
+export enum zoneChoice {
+  Zone1 = "zone1",
+  Zone2 = "zone2",
+  Zone3 = "zone3",
+  Zone4 = "zone4",
+  Zone5 = "zone5"
+}

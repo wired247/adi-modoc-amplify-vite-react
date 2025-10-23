@@ -165,7 +165,7 @@ const DeviceProfileModal: React.FC<{
             )}
         <div className="modal-buttons">
             <button onClick={handleUpdateProfile}>Submit</button>
-            <button onClick={() => setShowDeviceProfile(false)}>Close</button>
+            <button onClick={() => setShowDeviceProfile(false)}>Cancel</button>
         </div>
     </div>
   );
