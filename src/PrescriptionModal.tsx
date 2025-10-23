@@ -49,10 +49,6 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
         onClose();
     };
 
-    const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      handleSelectChange(event);
-    };
-
     if (!isOpen) return null;
 
     return (
