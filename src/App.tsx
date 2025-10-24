@@ -148,6 +148,42 @@ const MainApp: React.FC = () => {
     }
   };
 
+  const fetchOneDeviceValues = async (session: any, deviceId: string, s3Path: string) => {
+    try {
+      // setLoading(true);
+      // setError(null);
+
+      if (session != null && session.tokens != null) {
+        const response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${session.tokens?.idToken?.toString()}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'omit',
+          body: JSON.stringify({ "s3Key": s3Path, "uploadDate": "2024-10-24 12:32" })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch device: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setDeviceProfile(data);
+      } else {
+        console.error('missing authSession tokens', authSession);
+        throw new Error('Missing header for fetchOneDeviceValues()');
+      }
+    } catch (err) {
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      // setError(errorMessage);
+      console.error('Error fetching device values:', err);
+    } finally {
+      // setLoading(false);
+    }
+};
+
   const handleAddDevice = async () => {
     if (newDevice.kitId && newDevice.deviceId) {
       const device: Device = {
@@ -383,8 +419,11 @@ const MainApp: React.FC = () => {
           <ChooseDateModal
             deviceProfile={selectedDevice}
             setShowChooseDate={setShowChooseDate}
-            handleChooseDate={(key: string) => {
-              console.log(`Chosen S3 key: ${key}`);
+            handleChooseDate={(date: string, key: string) => {
+              console.log(`Chose S3 ${date} key: ${key}`);
+              fetchOneDeviceValues(authSession, 'user1', key)
+              console.log("updated profile after fetchOneDeviceValues()?")
+              console.log(deviceProfile)
               selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: DefaultHrData });
               setShowChooseDate(false);
             }}

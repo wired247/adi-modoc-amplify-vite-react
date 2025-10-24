@@ -4,7 +4,7 @@ import { Device } from './Modoc.types';
 const ChooseDateModal: React.FC<{
   deviceProfile: Device | null;
   setShowChooseDate: React.Dispatch<React.SetStateAction<boolean>>;
-  handleChooseDate: (key: string) => void;
+  handleChooseDate: (date: string, key: string) => void;
 }> = ({ deviceProfile, setShowChooseDate, handleChooseDate }) =>  {
   return (
     <div className="modal">
@@ -14,7 +14,9 @@ const ChooseDateModal: React.FC<{
           <div>
             {deviceProfile.pastMeasurements.map((measurement, index) => (
               <p key={index}>
-                <a href={`#${index}`} onClick={() => { handleChooseDate(measurement.key); }}>{measurement.date}</a>
+                <a href={`#${index}`} onClick={() => { 
+                  handleChooseDate(measurement.date, measurement.key); 
+                }}>{measurement.date}</a>
               </p>
             )) }
           </div>
