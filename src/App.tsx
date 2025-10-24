@@ -420,10 +420,7 @@ const MainApp: React.FC = () => {
             deviceProfile={selectedDevice}
             setShowChooseDate={setShowChooseDate}
             handleChooseDate={(date: string, key: string) => {
-              console.log(`Chose S3 ${date} key: ${key}`);
               fetchOneDeviceValues(authSession, 'user1', key)
-              console.log("updated oldProfile after fetchOneDeviceValues()?")
-              console.log(oldProfile)
               selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: oldProfile?.hrValues || [], lastActive: date });
               setShowChooseDate(false);
             }}
