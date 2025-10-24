@@ -154,7 +154,7 @@ const MainApp: React.FC = () => {
       // setError(null);
 
       if (session != null && session.tokens != null) {
-        const response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}`, {
+        const response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}?s3key=${encodeURIComponent(s3Path)}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${session.tokens?.idToken?.toString()}`,
@@ -162,7 +162,6 @@ const MainApp: React.FC = () => {
             'Accept': 'application/json',
           },
           credentials: 'omit',
-          body: JSON.stringify({ "s3Key": s3Path, "uploadDate": "2024-10-24 12:32" })
         });
 
         if (!response.ok) {
