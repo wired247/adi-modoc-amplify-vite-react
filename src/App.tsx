@@ -26,6 +26,7 @@ const MainApp: React.FC = () => {
   const [showDeviceProfile, setShowDeviceProfile] = useState(false);
   const [showPrescription, setShowPrescription] = useState(false);
   const [showChooseDate, setShowChooseDate] = useState(false);
+  const [oldProfile, setOldProfile] = useState<Device | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -169,7 +170,7 @@ const MainApp: React.FC = () => {
         }
 
         const data = await response.json();
-        setDeviceProfile(data);
+        setOldProfile(data);
       } else {
         console.error('missing authSession tokens', authSession);
         throw new Error('Missing header for fetchOneDeviceValues()');
@@ -421,9 +422,9 @@ const MainApp: React.FC = () => {
             handleChooseDate={(date: string, key: string) => {
               console.log(`Chose S3 ${date} key: ${key}`);
               fetchOneDeviceValues(authSession, 'user1', key)
-              console.log("updated profile after fetchOneDeviceValues()?")
-              console.log(deviceProfile)
-              selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: DefaultHrData });
+              console.log("updated oldProfile after fetchOneDeviceValues()?")
+              console.log(oldProfile)
+              selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: oldProfile?.hrValues || [], lastActive: date });
               setShowChooseDate(false);
             }}
           />
