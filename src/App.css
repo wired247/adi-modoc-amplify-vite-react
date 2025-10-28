@@ -272,7 +272,7 @@ button.auth-retry {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 
 .back-button {
@@ -374,6 +374,30 @@ button.auth-retry {
 .graph {
   width: 100%;
   height: 100%;
+}
+
+.measurement-zones {
+  margin-top: 40px;
+  margin-left: 20px;
+  font-size: 14px;
+  table {
+    border-collapse: collapse; /* Collapse borders between cells */
+    /* width: 80%; */
+  }
+
+  tr {
+    border: 1px solid darkgray; /* Apply border to the entire row */
+  }
+
+  td, th {
+    padding-left: 10px;
+    padding-right: 20px;
+    text-align: left;
+  }
+
+  td.align-right {
+      text-align: right;
+  }
 }
 
 /* profile form inputs */

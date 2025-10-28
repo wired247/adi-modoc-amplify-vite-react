@@ -3,7 +3,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
 import { Device } from './Modoc.types.ts';
-import { DeviceDefaults } from './DeviceDefaults.tsx';
+import { DeviceDefaults, FakeDeviceData } from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
@@ -121,7 +121,9 @@ const MainApp: React.FC = () => {
         
         // Validate that the response has the expected structure
         if (Array.isArray(data)) {
-          setDevices(data);
+          // setDevices(data);
+          const new_data = data.concat(FakeDeviceData);
+          setDevices(new_data);
         } else if (data.devices && Array.isArray(data.devices)) {
           setDevices(data.devices);
         } else {
@@ -242,7 +244,7 @@ const MainApp: React.FC = () => {
            headers: {
              'Content-Type': 'application/json',
            },
-           body: JSON.stringify(deviceProfile)
+           body: JSON.stringify(deviceProfile.zones)
         });
 
         if (!response.ok) {
