@@ -87,6 +87,7 @@ const MeasurementScreen: React.FC<{
                 <td>{row.zone}</td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {formatDuration(row.duration)}
                     <span 
                       style={{
                         display: 'inline-block',
@@ -97,7 +98,7 @@ const MeasurementScreen: React.FC<{
                         minWidth: row.duration > 0 ? '4px' : '0px'
                       }}
                     />
-                    {formatDuration(row.duration)}
+                    
                   </div>
                 </td>
                 <td>{row.range}</td>

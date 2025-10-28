@@ -441,6 +441,20 @@ select.prescription-select {
   margin-bottom: 10px;
 }
 
+/* Past Measurements modal */
+.profile-details p {
+  margin-bottom: 6px;
+}
+
+.profile-details a {
+  text-decoration: none;
+  color: #004985;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;

@@ -172,6 +172,7 @@ const MainApp: React.FC = () => {
         }
 
         const data = await response.json();
+        // console.log("setOldProfile? ", data.hrValues.length);
         setOldProfile(data);
       } else {
         console.error('missing authSession tokens', authSession);
@@ -422,9 +423,15 @@ const MainApp: React.FC = () => {
             deviceProfile={selectedDevice}
             setShowChooseDate={setShowChooseDate}
             handleChooseDate={(date: string, key: string) => {
-              fetchOneDeviceValues(authSession, 'user1', key)
-              selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: oldProfile?.hrValues || [], lastActive: date });
-              setShowChooseDate(false);
+              // console.log("fetch data for date:", date, "key:", key);
+              fetchOneDeviceValues(authSession, 'user1', key).then(() => {
+                // console.log("fetched: ", oldProfile?.hrValues);  // only works sometimes?
+                selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: oldProfile?.hrValues || [], lastActive: date });
+                // console.log("updated selectedDevice:", selectedDevice);
+                // console.log("updated selectedDevice? ", oldProfile?.hrValues.length);
+                // hrValues in selectedDevice is [] here? chart shows values
+                setShowChooseDate(false);
+              });
             }}
           />
         </div>
