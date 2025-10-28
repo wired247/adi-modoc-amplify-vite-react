@@ -554,3 +554,9 @@ select.prescription-select {
 .modal-buttons button:last-child:hover {
   background-color: #d0d0d0;
 }
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

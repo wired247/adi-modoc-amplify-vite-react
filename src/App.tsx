@@ -26,6 +26,7 @@ const MainApp: React.FC = () => {
   const [showDeviceProfile, setShowDeviceProfile] = useState(false);
   const [showPrescription, setShowPrescription] = useState(false);
   const [showChooseDate, setShowChooseDate] = useState(false);
+  const [chooseDateLoading, setChooseDateLoading] = useState(false);
   const [oldProfile, setOldProfile] = useState<Device | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -151,7 +152,7 @@ const MainApp: React.FC = () => {
     }
   };
 
-  const fetchOneDeviceValues = async (session: any, deviceId: string, s3Path: string) => {
+  const fetchOneDeviceValues = async (session: any, deviceId: string, s3Path: string): Promise<void> => {
     try {
       // setLoading(true);
       // setError(null);
@@ -182,6 +183,7 @@ const MainApp: React.FC = () => {
       // const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       // setError(errorMessage);
       console.error('Error fetching device values:', err);
+      throw err; // Re-throw to allow proper error handling in the caller
     } finally {
       // setLoading(false);
     }
@@ -422,16 +424,22 @@ const MainApp: React.FC = () => {
           <ChooseDateModal
             deviceProfile={selectedDevice}
             setShowChooseDate={setShowChooseDate}
-            handleChooseDate={(date: string, key: string) => {
-              // console.log("fetch data for date:", date, "key:", key);
-              fetchOneDeviceValues(authSession, 'user1', key).then(() => {
-                // console.log("fetched: ", oldProfile?.hrValues);  // only works sometimes?
-                selectedDevice && setSelectedDevice({ ...selectedDevice, hrValues: oldProfile?.hrValues || [], lastActive: date });
-                // console.log("updated selectedDevice:", selectedDevice);
-                // console.log("updated selectedDevice? ", oldProfile?.hrValues.length);
-                // hrValues in selectedDevice is [] here? chart shows values
+            isLoading={chooseDateLoading}
+            handleChooseDate={async (date: string, key: string) => {
+              setChooseDateLoading(true);
+              try {
+                await fetchOneDeviceValues(authSession, 'user1', key);
+                selectedDevice && setSelectedDevice({ 
+                  ...selectedDevice, 
+                  hrValues: oldProfile?.hrValues || [], 
+                  lastActive: date 
+                });
                 setShowChooseDate(false);
-              });
+              } catch (error) {
+                console.error('Error fetching device values:', error);
+              } finally {
+                setChooseDateLoading(false);
+              }
             }}
           />
         </div>
