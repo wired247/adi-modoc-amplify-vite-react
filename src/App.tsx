@@ -121,9 +121,9 @@ const MainApp: React.FC = () => {
         
         // Validate that the response has the expected structure
         if (Array.isArray(data)) {
-          // setDevices(data);
-          const new_data = data.concat(FakeDeviceData);
-          setDevices(new_data);
+          setDevices(data);
+          // const new_data = data.concat(FakeDeviceData);
+          // setDevices(new_data);
         } else if (data.devices && Array.isArray(data.devices)) {
           setDevices(data.devices);
         } else {
@@ -349,7 +349,7 @@ const MainApp: React.FC = () => {
 
   const renderMeasurementScreen = () => (
     <MeasurementScreen 
-      selectedDevice={selectedDevice} 
+      selectedDevice={selectedDevice}
       setSelectedDevice={setSelectedDevice}
       setShowChooseDate={setShowChooseDate}
     />

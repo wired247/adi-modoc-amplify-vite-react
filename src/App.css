@@ -389,6 +389,11 @@ button.auth-retry {
     border: 1px solid darkgray; /* Apply border to the entire row */
   }
 
+  th {
+    font-weight: bold;
+    color: #888;
+  }
+
   td, th {
     padding-left: 10px;
     padding-right: 20px;

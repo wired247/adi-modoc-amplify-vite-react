@@ -153,7 +153,7 @@ const MeasurementScreen: React.FC<{
         ) : (
           <div className="measurement-box">
             <div className="no-measurements">
-              No measurement data available
+              No measurements - patient could not finish activity
             </div>
           </div>
         )} 
