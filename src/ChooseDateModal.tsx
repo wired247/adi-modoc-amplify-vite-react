@@ -12,27 +12,14 @@ const ChooseDateModal: React.FC<{
       <h3>Past Activity for {deviceProfile?.id}</h3>
       
       {isLoading && (
-        <div className="loading-overlay" style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div className="loading-spinner" style={{
-            border: '4px solid #f3f3f3',
-            borderTop: '4px solid #3498db',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            animation: 'spin 1s linear infinite'
-          }}></div>
-        </div>
+        <div className="loading-spinner" style={{
+          border: '3px solid #f3f3f3',
+          borderTop: '3px solid #3498db',
+          borderRadius: '50%',
+          width: '20px',
+          height: '20px',
+          animation: 'spin 1s linear infinite'
+        }}></div>
       )}
       
       <div className="profile-details" style={{ opacity: isLoading ? 0.5 : 1 }}>
