@@ -10,13 +10,15 @@ const MeasurementScreen: React.FC<{
 }> = ({ selectedDevice, setSelectedDevice, setShowChooseDate }) => {
 
     const [currentDevice, setCurrentDevice] = useState<Device | null>(selectedDevice);
-    const [currentMeasurementValues, setMeasurementValues] = useState<Array<any>>(currentDevice?.hrValues || DefaultHrData);
+    // this gets messed up if we don't reset it when selectedDevice changes
+    // or when an activity has no hrValues (failed activity)
+    const [currentMeasurementValues, setMeasurementValues] = useState<Array<any>>(currentDevice?.hrValues || []);
     const [currentMeasurementDate, setMeasurementDate] = useState<string>(currentDevice?.lastActive || '');
 
     // Update local state when selectedDevice changes
     useEffect(() => {
         setCurrentDevice(selectedDevice);
-        setMeasurementValues(selectedDevice?.hrValues || DefaultHrData);
+        setMeasurementValues(selectedDevice?.hrValues || []);
         setMeasurementDate(selectedDevice?.lastActive || '');
     }, [selectedDevice]);
 

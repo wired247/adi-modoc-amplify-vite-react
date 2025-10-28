@@ -197,10 +197,10 @@ const DefaultHrData = [
 
 const FakeDeviceData = {
     id: "DW Samsung",
-    kitId: "kit004",
+    kitId: "KIT004",
     status: "disconnected",
     heartRate: 72,
-    lastActive: "2025-10-23 19:24:50",
+    lastActive: "2025-10-15 19:39:50",
     batteryLevel: 85,
     detail: "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Samsung_SM-A146U1/",
     zones: [{"order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00"}, {"order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00"}, {"order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500"}, {"order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000"}, {"order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000"}],

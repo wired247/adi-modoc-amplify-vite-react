@@ -3,7 +3,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
 import { Device } from './Modoc.types.ts';
-import { DeviceDefaults } from './DeviceDefaults.tsx';
+import { DeviceDefaults, FakeDeviceData } from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
@@ -39,8 +39,8 @@ const MainApp: React.FC = () => {
 
   // AWS endpoint URL
   // 'https://<api-id>.execute-api.<region>.amazonaws.com/<stage>/<resource>'
-  const AWS_DEVICES_ENDPOINT = 'https://hwm6t7hyy1.execute-api.us-east-1.amazonaws.com/dev/dashboard-devices';
-  // const AWS_DEVICES_ENDPOINT = 'https://x4oa3j9zc8.execute-api.us-east-1.amazonaws.com/test/dashboard-devices';
+  // const AWS_DEVICES_ENDPOINT = 'https://hwm6t7hyy1.execute-api.us-east-1.amazonaws.com/dev/dashboard-devices';
+  const AWS_DEVICES_ENDPOINT = 'https://x4oa3j9zc8.execute-api.us-east-1.amazonaws.com/test/dashboard-devices';
 
   useEffect(() => {
     fetchAuthInfo();
@@ -122,9 +122,9 @@ const MainApp: React.FC = () => {
         
         // Validate that the response has the expected structure
         if (Array.isArray(data)) {
-          setDevices(data);
-          // const new_data = data.concat(FakeDeviceData);
-          // setDevices(new_data);
+          // setDevices(data);
+          const new_data = data.concat(FakeDeviceData);
+          setDevices(new_data);
         } else if (data.devices && Array.isArray(data.devices)) {
           setDevices(data.devices);
         } else {
@@ -260,6 +260,45 @@ const MainApp: React.FC = () => {
 
       } catch (error) {
         console.error('Error updating device profile:', error);
+      }
+    }
+  };
+
+  const handleUpdatePrescription = async (prescription: any) => {
+    if (deviceProfile) {
+      const deviceId = deviceProfile.id;
+      let response;
+      try {
+        // update local state
+        setDevices(devices.map(d => d.id === deviceId ? {
+          ...d, zones: prescription
+        } : d));
+        // setShowPrescription(false);
+
+        // update device shadow on the server
+        response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer DUMMY_AUTH_TOKEN_FOR_NOW`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'omit',
+          body: JSON.stringify({ zones: prescription })
+        });
+
+        if (!response.ok) {
+          console.error(`Failed to update prescription: ${response.status} ${response.statusText}`, response);
+          throw new Error('Failed to update device prescription: ' + response.statusText);
+        }
+
+        const message = await response.json();
+        console.log("zones updated:")
+        console.log(message)
+
+      } catch (error) {
+        console.error('Error updating device prescription:', error);
+        throw new Error('Failed to update device prescription');
       }
     }
   };
@@ -463,7 +502,8 @@ const MainApp: React.FC = () => {
             isOpen={showPrescription}
             onClose={() => setShowPrescription(false)}
             onSave={(prescriptionData) => {
-              console.log('Prescription saved:', prescriptionData);
+              handleUpdatePrescription(prescriptionData);
+              //console.log('Prescription saved:', prescriptionData);
               setShowPrescription(false);
             }}
           />

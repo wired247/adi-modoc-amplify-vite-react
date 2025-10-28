@@ -185,7 +185,7 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
             </div>
             )}
             <div className="modal-buttons">
-                <button type="submit" className="save-button">
+                <button type="submit" className="save-button" onClick={() => onSave(formData)}>
                     Save Prescription
                 </button>
                 <button type="button" className="cancel-button" onClick={onClose}>
