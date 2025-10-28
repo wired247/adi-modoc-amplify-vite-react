@@ -3,7 +3,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
 import { Device } from './Modoc.types.ts';
-import { DeviceDefaults, FakeDeviceData } from './DeviceDefaults.tsx';
+import { DeviceDefaults, DefaultZones, FakeDeviceData } from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
@@ -187,7 +187,78 @@ const MainApp: React.FC = () => {
     } finally {
       // setLoading(false);
     }
-};
+  };
+
+  const zoneFromZoneName = (zoneName: string) => {
+    return DefaultZones.find((zone: { name: string; }) => zone.name === zoneName);
+  };
+
+  const deviceZonesFromPrescription = (prescription: any) => {
+    // Convert prescription object to zones array format expected by the device
+    if (!prescription) {
+      return [];
+    }
+
+    const zones = [];
+    
+    // Map prescription zones to device zones format
+    if (prescription.first && prescription.firstDuration) {
+      const thresholds = zoneFromZoneName(prescription.first);
+      zones.push({
+        order: 1,
+        minHR: thresholds ? thresholds.minHR : 40,
+        maxHR: thresholds ? thresholds.maxHR : 150,
+        duration: prescription.firstDuration,
+        color: thresholds ? thresholds.color : '#c0c0c0'
+      });
+    }
+    
+    if (prescription.second && prescription.secondDuration) {
+      const thresholds = zoneFromZoneName(prescription.second);
+      zones.push({
+        order: 2,
+        minHR: thresholds ? thresholds.minHR : 40,
+        maxHR: thresholds ? thresholds.maxHR : 150,
+        duration: prescription.secondDuration,
+        color: thresholds ? thresholds.color : '#c0c0c0'
+      });
+    }
+    
+    if (prescription.third && prescription.thirdDuration) {
+      const thresholds = zoneFromZoneName(prescription.third);
+      zones.push({
+        order: 3,
+        minHR: thresholds ? thresholds.minHR : 40,
+        maxHR: thresholds ? thresholds.maxHR : 150,
+        duration: prescription.thirdDuration,
+        color: thresholds ? thresholds.color : '#c0c0c0'
+      });
+    }
+    
+    if (prescription.fourth && prescription.fourthDuration) {
+      const thresholds = zoneFromZoneName(prescription.fourth);
+      zones.push({
+        order: 4,
+        minHR: thresholds ? thresholds.minHR : 40,
+        maxHR: thresholds ? thresholds.maxHR : 150,
+        duration: prescription.fourthDuration,
+        color: thresholds ? thresholds.color : '#c0c0c0'
+      });
+    }
+    
+    if (prescription.fifth && prescription.fifthDuration) {
+      const thresholds = zoneFromZoneName(prescription.fifth);
+      zones.push({
+        order: 5,
+        minHR: thresholds ? thresholds.minHR : 40,
+        maxHR: thresholds ? thresholds.maxHR : 150,
+        duration: prescription.fifthDuration,
+        color: thresholds ? thresholds.color : '#c0c0c0'
+      });
+    }
+
+    return zones;
+  }
 
   const handleAddDevice = async () => {
     if (newDevice.kitId && newDevice.deviceId) {
@@ -243,11 +314,14 @@ const MainApp: React.FC = () => {
 
         // update device shadow on the server
         response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}`, {
-           method: 'PATCH',
-           headers: {
-             'Content-Type': 'application/json',
-           },
-           body: JSON.stringify(deviceProfile.zones)
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer DUMMY_AUTH_TOKEN_FOR_NOW`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'omit',
+          body: JSON.stringify(deviceProfile.zones)
         });
 
         if (!response.ok) {
@@ -257,6 +331,7 @@ const MainApp: React.FC = () => {
         const message = await response.json();
         console.log("profile updated:")
         console.log(message)
+        // TODO: set deviceZones from response.updates.zones
 
       } catch (error) {
         console.error('Error updating device profile:', error);
@@ -269,11 +344,29 @@ const MainApp: React.FC = () => {
       const deviceId = deviceProfile.id;
       let response;
       try {
+        const deviceZones = deviceZonesFromPrescription(prescription);
+        console.log("new zones:", deviceZones);
         // update local state
         setDevices(devices.map(d => d.id === deviceId ? {
-          ...d, zones: prescription
+          ...d, zones: deviceZones
         } : d));
-        // setShowPrescription(false);
+       /*
+       console.log("new prescription:", prescription);
+       {
+        "zones": {
+          "first": "Zone 1",
+          "second": "Zone 2",
+          "third": "Zone 3",
+          "fourth": "Zone 2",
+          "fifth": "Zone 1",
+          "firstDuration": 20,
+          "secondDuration": 20,
+          "thirdDuration": 30,
+          "fourthDuration": 20,
+          "fifthDuration": 30
+        }
+      }
+       */
 
         // update device shadow on the server
         response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}`, {

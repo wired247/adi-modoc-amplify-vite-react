@@ -1,5 +1,13 @@
 import { Device } from './Modoc.types';
 
+const DefaultZones = [
+  { "name": "Zone 1", "minHR": 40, "maxHR": 135, "color": "#00FF00" },
+  { "name": "Zone 2", "minHR": 136, "maxHR": 147, "color": "#FFFF00" },
+  { "name": "Zone 3", "minHR": 148, "maxHR": 160, "color": "#FFA500" },
+  { "name": "Zone 4", "minHR": 161, "maxHR": 172, "color": "#FF0000" },
+  { "name": "Zone 5", "minHR": 173, "maxHR": 255, "color": "#FF0000" }
+];
+
 // Default device data for initial state or testing
 const DeviceDefaults: Device[] = [
   {
@@ -13,9 +21,9 @@ const DeviceDefaults: Device[] = [
     "zones": [
       { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
       { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
-      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
-      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
+      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FF0000" },
+      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
+      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#00FF00" }
     ],
     "hrValues": [
       {"x": 0, "y": 88}, {"x": 2, "y": 92}, {"x": 4, "y": 98}, {"x": 6, "y": 102},
@@ -59,9 +67,9 @@ const DeviceDefaults: Device[] = [
     "zones": [
       { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
       { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
-      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
-      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
+      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FF0000" },
+      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
+      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#00FF00" }
     ],
     "hrValues": [
       {"x": 0, "y": 69}, {"x": 2, "y": 69}, {"x": 2, "y": 69}, {"x": 4, "y": 69},
@@ -101,9 +109,9 @@ const DeviceDefaults: Device[] = [
     "zones": [
       { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
       { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500" },
-      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000" },
-      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000" }
+      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FF0000" },
+      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
+      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#00FF00" }
     ],
     "hrValues": [
       {"x": 0, "y": 93}, {"x": 2, "y": 99}, {"x": 4, "y": 103}, {"x": 6, "y": 105},
@@ -208,4 +216,4 @@ const FakeDeviceData = {
     pastMeasurements: [{"date": "2025-10-15 19:39", "key": "pub/ADI_Samsung_SM-A146U1/ADI_Samsung_SM-A146U1_2025-10-15_19-39-37"},{"date": "2025-10-15 19:22", "key": "pub/ADI_Samsung_SM-A146U1/ADI_Samsung_SM-A146U1_2025-10-15_19-22-51"}]
   }
 
-export { DeviceDefaults, DefaultHrData, FakeDeviceData };
+export { DeviceDefaults, DefaultZones, DefaultHrData, FakeDeviceData };

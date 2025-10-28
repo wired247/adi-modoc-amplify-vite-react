@@ -12,16 +12,6 @@ const DeviceProfileModal: React.FC<{
         <h3>Zone Thresholds for {deviceProfile?.id}</h3>
             {deviceProfile ? (
             <div className="profile-details">
-                {/*
-                <div className="form-group">
-                <label>Kit ID:</label>
-                <input
-                    type="text"
-                    value={deviceProfile.kitId}
-                    onChange={(e) => setDeviceProfile({ ...deviceProfile, kitId: e.target.value })}
-                />
-                </div>
-                */}
                 <div className="form-group">
                     <label>Zone 1:</label>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -69,7 +59,6 @@ const DeviceProfileModal: React.FC<{
                                 style={{ width: '100%' }}
                             />
                         </div>
-                        {/* <span className="profile-captions"> for 30 seconds</span> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -94,7 +83,6 @@ const DeviceProfileModal: React.FC<{
                                 style={{ width: '100%' }}
                             />
                         </div>
-                        {/* <span className="profile-captions"> for 20 seconds</span> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -119,7 +107,6 @@ const DeviceProfileModal: React.FC<{
                                 style={{ width: '100%' }}
                             />
                         </div>
-                        {/* <span className="profile-captions"> for 30 seconds</span> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -144,19 +131,8 @@ const DeviceProfileModal: React.FC<{
                             style={{ width: '100%' }}
                         />
                         </div>
-                        {/* <span className="profile-captions">for 20 seconds</span> */}
                     </div>
                 </div>
-                {/*
-                <div className="form-group">
-                <label>Detail URL:</label>
-                <input
-                    type="text"
-                    value={deviceProfile.detail}
-                    onChange={(e) => setDeviceProfile({ ...deviceProfile, detail: e.target.value })}
-                />
-                </div>
-                */}
             </div>
             ) : (
             <div className="error-message-outlined">

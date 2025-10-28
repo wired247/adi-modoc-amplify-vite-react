@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import { Device } from './Modoc.types';
-import { DefaultHrData } from './DeviceDefaults';
 
 const MeasurementScreen: React.FC<{
     selectedDevice: Device | null; 
