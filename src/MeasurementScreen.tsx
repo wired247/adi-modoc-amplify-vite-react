@@ -51,6 +51,13 @@ const MeasurementScreen: React.FC<{
         });
     };
 
+    const formatDuration = (duration: number) => {
+      const minutes = Math.floor(duration / 60);
+      const seconds = duration % 60;
+      const formattedDuration = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      return formattedDuration;
+    };
+
     const zone_data = calculateZoneDurations();
     const zone_columns = [
       { header: 'Zone', accessorKey: 'zone' },
@@ -90,7 +97,7 @@ const MeasurementScreen: React.FC<{
                         minWidth: row.duration > 0 ? '4px' : '0px'
                       }}
                     />
-                    {row.duration}
+                    {formatDuration(row.duration)}
                   </div>
                 </td>
                 <td>{row.range}</td>
