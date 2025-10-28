@@ -25,13 +25,33 @@ const MeasurementScreen: React.FC<{
         return `${months[date.getMonth()]}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
     };
 
-    const zone_data = [
-      {zone: 1, range: '40 - 135 bpm', duration: 56},
-      {zone: 2, range: '136 - 147 bpm', duration: 26},
-      {zone: 3, range: '148 - 160 bpm', duration: 12},
-      {zone: 4, range: '161 - 172 bpm', duration: 24},
-      {zone: 5, range: '173 - 255 bpm', duration: 0},
-    ];
+    // Calculate duration for each zone based on HR values
+    const calculateZoneDurations = () => {
+        const baseZones = [
+            {zone: 1, range: '40 - 135 bpm', min: 40, max: 135},
+            {zone: 2, range: '136 - 147 bpm', min: 136, max: 147},
+            {zone: 3, range: '148 - 160 bpm', min: 148, max: 160},
+            {zone: 4, range: '161 - 172 bpm', min: 161, max: 172},
+            {zone: 5, range: '173 - 255 bpm', min: 173, max: 255},
+        ];
+
+        if (!currentMeasurementValues || currentMeasurementValues.length === 0) {
+            return baseZones.map(zone => ({...zone, duration: 0}));
+        }
+
+        return baseZones.map(zone => {
+            const duration = currentMeasurementValues.filter(dataPoint => 
+                dataPoint.y >= zone.min && dataPoint.y <= zone.max
+            ).length;
+            if (currentMeasurementValues.length < 100) {
+                return {...zone, duration: duration * 2};
+            } else {
+                return {...zone, duration: duration};
+            }
+        });
+    };
+
+    const zone_data = calculateZoneDurations();
     const zone_columns = [
       { header: 'Zone', accessorKey: 'zone' },
       { header: 'Duration', accessorKey: 'duration' },
