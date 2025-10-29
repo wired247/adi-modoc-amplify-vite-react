@@ -3,7 +3,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
 import { Device } from './Modoc.types.ts';
-import { DeviceDefaults, DefaultZones, FakeDeviceData } from './DeviceDefaults.tsx';
+import { DeviceDefaults, DefaultZones } from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
@@ -45,6 +45,13 @@ const MainApp: React.FC = () => {
   useEffect(() => {
     fetchAuthInfo();
   }, []);
+
+  const deviceThingNames: { [key: string]: string } = {
+    "User 1": "ADI_User1_test_device",
+    "User 2": "ADI_User2_device",
+    "User 3": "ADI_user3_device",
+    "DW Samsung": "ADI_Samsung_SM-A146U1",
+  }
 
   // Fetch authentication information
   const fetchAuthInfo = async () => {
@@ -122,9 +129,9 @@ const MainApp: React.FC = () => {
         
         // Validate that the response has the expected structure
         if (Array.isArray(data)) {
-          // setDevices(data);
-          const new_data = data.concat(FakeDeviceData);
-          setDevices(new_data);
+          setDevices(data);
+          // const new_data = data.concat(FakeDeviceData);
+          // setDevices(new_data);
         } else if (data.devices && Array.isArray(data.devices)) {
           setDevices(data.devices);
         } else {
@@ -345,31 +352,17 @@ const MainApp: React.FC = () => {
       let response;
       try {
         const deviceZones = deviceZonesFromPrescription(prescription);
-        console.log("new zones:", deviceZones);
+        // console.log("new zones:", deviceZones);
         // update local state
         setDevices(devices.map(d => d.id === deviceId ? {
           ...d, zones: deviceZones
         } : d));
-       /*
-       console.log("new prescription:", prescription);
-       {
-        "zones": {
-          "first": "Zone 1",
-          "second": "Zone 2",
-          "third": "Zone 3",
-          "fourth": "Zone 2",
-          "fifth": "Zone 1",
-          "firstDuration": 20,
-          "secondDuration": 20,
-          "thirdDuration": 30,
-          "fourthDuration": 20,
-          "fifthDuration": 30
-        }
-      }
-       */
+        // console.log("new prescription:", prescription);
+        // get real IoT thing name from deviceId
+        const thingName = deviceThingNames[deviceId] || 'ADI_Samsung_SM-A146U1';
 
         // update device shadow on the server
-        response = await fetch(`${AWS_DEVICES_ENDPOINT}/${deviceId}`, {
+        response = await fetch(`${AWS_DEVICES_ENDPOINT}/${thingName}`, {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer DUMMY_AUTH_TOKEN_FOR_NOW`,
