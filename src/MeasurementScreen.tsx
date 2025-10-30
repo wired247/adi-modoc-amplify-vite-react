@@ -135,13 +135,13 @@ const MeasurementScreen: React.FC<{
                     data: currentMeasurementValues
                   }
                 ]}
-                yScale={{ type: 'linear', min: 0, max: 'auto', stacked: true, reverse: false }}
+                yScale={{ type: 'linear', min: 40, max: 200, stacked: true, reverse: false }}
                 curve='natural'
                 useMesh={true}
-                margin={{ top: 10, right: 30, bottom: 30, left: 40 }}
+                margin={{ top: 10, right: 30, bottom: 40, left: 50 }}
                 xScale={{ type: 'linear' }}
-                axisBottom={{ legend: 'Time', legendOffset: 20, legendPosition: 'middle' }}
-                axisLeft={{ legend: 'BPM', legendOffset: -30, legendPosition: 'middle' }}
+                axisBottom={{ legend: 'Time (seconds)', legendOffset: 30, legendPosition: 'middle' }}
+                axisLeft={{ legend: 'BPM', legendOffset: -40, legendPosition: 'middle' }}
                 colors={{ scheme: 'nivo' }}
                 lineWidth={3}
                 pointSize={6}
