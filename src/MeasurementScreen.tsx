@@ -142,10 +142,12 @@ const MeasurementScreen: React.FC<{
                 xScale={{ type: 'linear' }}
                 axisBottom={{ legend: 'Time (seconds)', legendOffset: 30, legendPosition: 'middle' }}
                 axisLeft={{ legend: 'BPM', legendOffset: -40, legendPosition: 'middle' }}
-                colors={{ scheme: 'nivo' }}
+                colors={['#2CA5E0', '#1E5631', '#FF7F11', '#9C27B0']}
                 lineWidth={3}
                 pointSize={6}
                 pointColor={{ theme: 'background' }}
+                enableArea={true}
+                areaOpacity={0.1}
               />
             </div>
             <div className="measurement-zones">
