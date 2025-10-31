@@ -8,6 +8,14 @@ const DefaultZones = [
   { "name": "Zone 5", "minHR": 173, "maxHR": 255, "color": "#FF0000" }
 ];
 
+const DefaultTargets = [
+  { "zone": "Zone 1", "duration": 20 },
+  { "zone": "Zone 2", "duration": 20 },
+  { "zone": "Zone 4", "duration": 30 },
+  { "zone": "Zone 2", "duration": 20 },
+  { "zone": "Zone 1", "duration": 30 }
+];
+
 // Default device data for initial state or testing
 const DeviceDefaults: Device[] = [
   {
@@ -18,13 +26,11 @@ const DeviceDefaults: Device[] = [
     "lastActive": "2025-10-21 16:30:28",
     "batteryLevel": 50,
     "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_User1_test_device/",
-    "zones": [
-      { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
-      { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FF0000" },
-      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#00FF00" }
-    ],
+    "zones": DefaultZones.map((zone, index) => ({ 
+        order: index + 1, 
+        minHR: zone.minHR, 
+        maxHR: zone.maxHR, 
+        color: zone.color })),
     "hrValues": [
       {"x": 0, "y": 88}, {"x": 2, "y": 92}, {"x": 4, "y": 98}, {"x": 6, "y": 102},
       {"x": 8, "y": 102}, {"x": 10, "y": 104}, {"x": 12, "y": 104}, {"x": 14, "y": 104},
@@ -54,7 +60,8 @@ const DeviceDefaults: Device[] = [
       { "date": "2025-10-16 17:13", "key": "pub/ADI_User1_test_device/ADI_User1_test_device_2025-10-16_17-13-47" },
       { "date": "2025-10-16 17:06", "key": "pub/ADI_User1_test_device/ADI_User1_test_device_2025-10-16_17-06-38" },
       { "date": "2025-10-16 16:56", "key": "pub/ADI_User1_test_device/ADI_User1_test_device_2025-10-16_16-56-05" }
-    ]
+    ],
+    "targets": DefaultTargets
   },
   {
     "id": "User 2",
@@ -64,13 +71,11 @@ const DeviceDefaults: Device[] = [
     "lastActive": "2025-10-21 17:45:18",
     "batteryLevel": 50,
     "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_User2_device/",
-    "zones": [
-      { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
-      { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FF0000" },
-      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#00FF00" }
-    ],
+    "zones": DefaultZones.map((zone, index) => ({ 
+        order: index + 1, 
+        minHR: zone.minHR, 
+        maxHR: zone.maxHR, 
+        color: zone.color })),
     "hrValues": [
       {"x": 0, "y": 69}, {"x": 2, "y": 69}, {"x": 2, "y": 69}, {"x": 4, "y": 69},
       {"x": 4, "y": 69}, {"x": 6, "y": 68}, {"x": 8, "y": 67}, {"x": 10, "y": 66},
@@ -96,7 +101,8 @@ const DeviceDefaults: Device[] = [
       { "date": "2025-10-20 21:08", "key": "pub/ADI_User2_device/ADI_User2_device_2025-10-20_21-08-08" },
       { "date": "2025-10-20 19:53", "key": "pub/ADI_User2_device/ADI_User2_device_2025-10-20_19-53-07" },
       { "date": "2025-10-20 19:52", "key": "pub/ADI_User2_device/ADI_User2_device_2025-10-20_19-52-05" }
-    ]
+    ],
+    "targets": DefaultTargets
   },
   {
     "id": "User 3",
@@ -106,13 +112,11 @@ const DeviceDefaults: Device[] = [
     "lastActive": "2025-10-21 18:27:45",
     "batteryLevel": 80,
     "detail": "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_user3_device/",
-    "zones": [
-      { "order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00" },
-      { "order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FF0000" },
-      { "order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00" },
-      { "order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#00FF00" }
-    ],
+    "zones": DefaultZones.map((zone, index) => ({ 
+        order: index + 1, 
+        minHR: zone.minHR, 
+        maxHR: zone.maxHR, 
+        color: zone.color })),
     "hrValues": [
       {"x": 0, "y": 93}, {"x": 2, "y": 99}, {"x": 4, "y": 103}, {"x": 6, "y": 105},
       {"x": 8, "y": 106}, {"x": 10, "y": 105}, {"x": 12, "y": 105}, {"x": 14, "y": 107},
@@ -133,87 +137,88 @@ const DeviceDefaults: Device[] = [
     ],
     "pastMeasurements": [
       { "date": "2025-10-21 18:27", "key": "pub/ADI_user3_device/ADI_user3_device_2025-10-21_18-27-43" }
-    ]
+    ],
+    "targets": DefaultTargets
   },
 ];
 
 const DefaultHrData = [
-  { x: 0, y: 88 },
-  { x: 2, y: 90 },
-  { x: 4, y: 93 },
-  { x: 6, y: 94 },
-  { x: 8, y: 95 },
-  { x: 10, y: 98 },
-  { x: 12, y: 102 },
-  { x: 14, y: 103 },
-  { x: 16, y: 102 },
-  { x: 18, y: 101 },
-  { x: 20, y: 98 },
-  { x: 22, y: 96 },
-  { x: 24, y: 93 },
-  { x: 26, y: 90 },
-  { x: 28, y: 90 },
-  { x: 30, y: 90 },
-  { x: 32, y: 90 },
-  { x: 34, y: 90 },
-  { x: 36, y: 91 },
-  { x: 38, y: 92 },
-  { x: 40, y: 91 },
-  { x: 42, y: 90 },
-  { x: 44, y: 90 },
-  { x: 46, y: 92 },
-  { x: 48, y: 96 },
-  { x: 50, y: 102 },
-  { x: 52, y: 106 },
-  { x: 54, y: 104 },
-  { x: 56, y: 102 },
-  { x: 58, y: 99 },
-  { x: 60, y: 97 },
-  { x: 62, y: 96 },
-  { x: 64, y: 96 },
-  { x: 68, y: 96 },
-  { x: 70, y: 96 },
-  { x: 72, y: 94 },
-  { x: 74, y: 96 },
-  { x: 76, y: 95 },
-  { x: 78, y: 94 },
-  { x: 80, y: 94 },
-  { x: 82, y: 92 },
-  { x: 84, y: 94 },
-  { x: 86, y: 97 },
-  { x: 88, y: 96 },
-  { x: 90, y: 92 },
-  { x: 92, y: 82 },
-  { x: 94, y: 77 },
-  { x: 96, y: 74 },
-  { x: 98, y: 73 },
-  { x: 100, y: 77 },
-  { x: 102, y: 82 },
-  { x: 104, y: 88 },
-  { x: 106, y: 91 },
-  { x: 108, y: 92 },
-  { x: 110, y: 95 },
-  { x: 112, y: 94 },
-  { x: 114, y: 90 },
-  { x: 116, y: 88 },
-  { x: 118, y: 88 },
-  { x: 120, y: 89 },
-  { x: 122, y: 91 },
-  { x: 124, y: 92 },
-  { x: 128, y: 91 }
+  { x: 0, y: 92 },
+  { x: 2, y: 94 },
+  { x: 4, y: 98 },
+  { x: 6, y: 101 },
+  { x: 8, y: 101 },
+  { x: 10, y: 107 },
+  { x: 12, y: 111 },
+  { x: 14, y: 111 },
+  { x: 16, y: 118 },
+  { x: 18, y: 125 },
+  { x: 20, y: 123 },
+  { x: 22, y: 128 },
+  { x: 24, y: 133 },
+  { x: 26, y: 132 },
+  { x: 28, y: 143 },
+  { x: 30, y: 144 },
+  { x: 32, y: 143 },
+  { x: 34, y: 146 },
+  { x: 36, y: 149 },
+  { x: 38, y: 148 },
+  { x: 40, y: 158 },
+  { x: 42, y: 165 },
+  { x: 44, y: 167 },
+  { x: 46, y: 164 },
+  { x: 48, y: 162 },
+  { x: 50, y: 163 },
+  { x: 52, y: 163 },
+  { x: 54, y: 161 },
+  { x: 56, y: 162 },
+  { x: 58, y: 163 },
+  { x: 60, y: 166 },
+  { x: 62, y: 167 },
+  { x: 64, y: 164 },
+  { x: 68, y: 156 },
+  { x: 70, y: 157 },
+  { x: 72, y: 154 },
+  { x: 74, y: 146 },
+  { x: 76, y: 144 },
+  { x: 78, y: 142 },
+  { x: 80, y: 147 },
+  { x: 82, y: 145 },
+  { x: 84, y: 144 },
+  { x: 86, y: 142 },
+  { x: 88, y: 143 },
+  { x: 90, y: 136 },
+  { x: 92, y: 132 },
+  { x: 94, y: 130 },
+  { x: 96, y: 129 },
+  { x: 98, y: 126 },
+  { x: 100, y: 126 },
+  { x: 102, y: 120 },
+  { x: 104, y: 123 },
+  { x: 106, y: 120 },
+  { x: 108, y: 123 },
+  { x: 110, y: 123 },
+  { x: 112, y: 120 },
+  { x: 114, y: 122 },
+  { x: 116, y: 122 },
+  { x: 118, y: 120 },
+  { x: 120, y: 118 }
 ];
 
 const FakeDeviceData = {
-    id: "DW Samsung",
+    id: "User 4",
     kitId: "KIT004",
     status: "disconnected",
     heartRate: 72,
-    lastActive: "2025-10-15 19:39:50",
+    lastActive: "2025-10-30 19:39:50",
     batteryLevel: 85,
     detail: "https://d18xy4xgz3veo8.cloudfront.net/pub/ADI_Samsung_SM-A146U1/",
-    zones: [{"order": 1, "minHR": 40, "maxHR": 135, "duration": 20, "color": "#00FF00"}, {"order": 2, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FFFF00"}, {"order": 3, "minHR": 161, "maxHR": 172, "duration": 30, "color": "#FFA500"}, {"order": 4, "minHR": 136, "maxHR": 147, "duration": 20, "color": "#FF0000"}, {"order": 5, "minHR": 40, "maxHR": 135, "duration": 30, "color": "#FF0000"}],
-    hrValues: [{"x": 0, "y": 99}, {"x": 2, "y": 102}, {"x": 4, "y": 103}, {"x": 6, "y": 100}, {"x": 8, "y": 102}, {"x": 10, "y": 103}],
-    pastMeasurements: [{"date": "2025-10-15 19:39", "key": "pub/ADI_Samsung_SM-A146U1/ADI_Samsung_SM-A146U1_2025-10-15_19-39-37"},{"date": "2025-10-15 19:22", "key": "pub/ADI_Samsung_SM-A146U1/ADI_Samsung_SM-A146U1_2025-10-15_19-22-51"}]
+    zones: DefaultZones.map((zone, index) => ({ order: index + 1, minHR: zone.minHR, maxHR: zone.maxHR, color: zone.color })),
+    hrValues: DefaultHrData,
+    pastMeasurements: [],
+    targets: DefaultTargets
   }
+// hrValues: [{"x": 0, "y": 99}, {"x": 2, "y": 102}, {"x": 4, "y": 103}, {"x": 6, "y": 100}, {"x": 8, "y": 102}, {"x": 10, "y": 103}]
+// pastMeasurements: [{"date": "2025-10-15 19:39", "key": "pub/ADI_Samsung_SM-A146U1/ADI_Samsung_SM-A146U1_2025-10-15_19-39-37"},{"date": "2025-10-15 19:22", "key": "pub/ADI_Samsung_SM-A146U1/ADI_Samsung_SM-A146U1_2025-10-15_19-22-51"}]
 
 export { DeviceDefaults, DefaultZones, DefaultHrData, FakeDeviceData };

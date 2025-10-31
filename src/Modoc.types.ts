@@ -9,13 +9,13 @@ export interface Device {
   zones: HrZone[];
   hrValues: { x: number; y: number }[];
   pastMeasurements: { date: string; key: string; }[];
+  targets: { zone: string, duration: number }[];
 }
 
 export interface HrZone {
   order: number
   minHR: number;
   maxHR: number;
-  duration: number; // in seconds
   color: string;    // hex color code
 }
 
