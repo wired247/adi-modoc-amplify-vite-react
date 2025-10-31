@@ -280,7 +280,8 @@ const MainApp: React.FC = () => {
         detail: '',
         zones: [],
         hrValues: [],
-        pastMeasurements: []
+        pastMeasurements: [],
+        targets: []
       };
 
       try {
