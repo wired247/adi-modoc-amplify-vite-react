@@ -49,6 +49,23 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
         onClose();
     };
 
+    const getTargetForZoneIndex = (index: number) => {
+        if (!deviceProfile || !deviceProfile.targets) return indexToZoneKey(index);
+        const target = deviceProfile.targets[index];
+        return target ? target.zone : indexToZoneKey(index);
+    }
+
+    const indexToZoneKey = (index: number) => {
+        switch (index) {
+            case 0: return formData.first;
+            case 1: return formData.second;
+            case 2: return formData.third;
+            case 3: return formData.fourth;
+            case 4: return formData.fifth;
+            default: return formData.first;
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -61,7 +78,7 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
                         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                             <div style={{ flex: 1 }}>
                                 <select id="first" name="first" className="prescription-select" 
-                                    value={formData.first} onChange={handleSelectChange} >
+                                    value={getTargetForZoneIndex(0)} onChange={handleSelectChange} >
                                     {Object.values(zoneChoice).map(zone => (
                                         <option key={zone} value={zone}>{zone}</option>
                                     ))}
@@ -85,7 +102,7 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
                         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                             <div style={{ flex: 1 }}>
                                 <select id="second" name="second" className="prescription-select"
-                                    value={formData.second} onChange={handleSelectChange} >
+                                    value={getTargetForZoneIndex(1)} onChange={handleSelectChange} >
                                     {Object.values(zoneChoice).map(zone => (
                                         <option key={zone} value={zone}>{zone}</option>
                                     ))}
@@ -109,7 +126,7 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
                         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                             <div style={{ flex: 1 }}>
                                 <select id="third" name="third" className="prescription-select"
-                                    value={formData.third} onChange={handleSelectChange} >
+                                    value={getTargetForZoneIndex(2)} onChange={handleSelectChange} >
                                     {Object.values(zoneChoice).map(zone => (
                                         <option key={zone} value={zone}>{zone}</option>
                                     ))}
@@ -133,7 +150,7 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
                         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                             <div style={{ flex: 1 }}>
                                 <select id="fourth" name="fourth" className="prescription-select"
-                                    value={formData.fourth} onChange={handleSelectChange} >
+                                    value={getTargetForZoneIndex(3)} onChange={handleSelectChange} >
                                     {Object.values(zoneChoice).map(zone => (
                                         <option key={zone} value={zone}>{zone}</option>
                                     ))}
@@ -157,7 +174,7 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
                         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                             <div style={{ flex: 1 }}>
                                 <select id="fifth" name="fifth" className="prescription-select"
-                                    value={formData.fifth} onChange={handleSelectChange} >
+                                    value={getTargetForZoneIndex(4)} onChange={handleSelectChange} >
                                     {Object.values(zoneChoice).map(zone => (
                                         <option key={zone} value={zone}>{zone}</option>
                                     ))}
