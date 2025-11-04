@@ -3,7 +3,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
 import { Device } from './Modoc.types.ts';
-import { DeviceDefaults, DefaultZones, FakeDeviceData } from './DeviceDefaults.tsx';
+import { DeviceDefaults, FakeDeviceData } from './DeviceDefaults.tsx';
 import DashboardTable from './DashboardTable.tsx';
 import DeviceProfileModal from './DeviceProfileModal.tsx';
 import MeasurementScreen from './MeasurementScreen.tsx';
@@ -197,6 +197,7 @@ const MainApp: React.FC = () => {
     }
   };
 
+  /*
   const zoneFromZoneName = (zoneName: string) => {
     return DefaultZones.find((zone: { name: string; }) => zone.name === zoneName);
   };
@@ -267,6 +268,47 @@ const MainApp: React.FC = () => {
 
     return zones;
   }
+  */
+
+  const deviceTargetsFromPrescription = (prescription: any) => {
+    // Convert prescription object to targets array
+    if (!prescription) {
+      return [];
+    }
+    const targets = [];
+    if (prescription.first && prescription.firstDuration) {
+      targets.push({
+        zone: prescription.first,
+        duration: prescription.firstDuration,
+      });
+    }
+    if (prescription.second && prescription.secondDuration) {
+      targets.push({
+        zone: prescription.second,
+        duration: prescription.secondDuration,
+      });
+    }
+    if (prescription.third && prescription.thirdDuration) {
+      targets.push({
+        zone: prescription.third,
+        duration: prescription.thirdDuration,
+      });
+    }
+    if (prescription.fourth && prescription.fourthDuration) {
+      targets.push({
+        zone: prescription.fourth,
+        duration: prescription.fourthDuration,
+      });
+    }
+    if (prescription.fifth && prescription.fifthDuration) {
+      targets.push({
+        zone: prescription.fifth,
+        duration: prescription.fifthDuration,
+      });
+    }
+
+    return targets;
+  };
 
   const handleAddDevice = async () => {
     if (newDevice.kitId && newDevice.deviceId) {
@@ -353,13 +395,12 @@ const MainApp: React.FC = () => {
       const deviceId = deviceProfile.id;
       let response;
       try {
-        const deviceZones = deviceZonesFromPrescription(prescription);
-        // console.log("new zones:", deviceZones);
+        const deviceTargets = deviceTargetsFromPrescription(prescription);
         // update local state
         setDevices(devices.map(d => d.id === deviceId ? {
-          ...d, zones: deviceZones
+          ...d, targets: deviceTargets
         } : d));
-        // console.log("new prescription:", prescription);
+        // console.log("new devices:", devices);
         // get real IoT thing name from deviceId
         const thingName = deviceThingNames[deviceId] || 'ADI_Samsung_SM-A146U1';
 
@@ -591,7 +632,6 @@ const MainApp: React.FC = () => {
             onClose={() => setShowPrescription(false)}
             onSave={(prescriptionData) => {
               handleUpdatePrescription(prescriptionData);
-              //console.log('Prescription saved:', prescriptionData);
               setShowPrescription(false);
             }}
           />
