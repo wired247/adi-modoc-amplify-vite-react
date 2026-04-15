@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { signOut, getCurrentUser, fetchAuthSession, AuthUser } from 'aws-amplify/auth';
@@ -10,6 +11,7 @@ import MeasurementScreen from './MeasurementScreen.tsx';
 import PrescriptionModal from './PrescriptionModal.tsx';
 import ChooseDateModal from './ChooseDateModal.tsx';
 import AnalogDevicesLogo1 from "./AnalogDevicesLogo1";
+import OAuthConsent from './OAuthConsent';
 import './App.css';
 
 const MainApp: React.FC = () => {
@@ -699,12 +701,46 @@ const MainApp: React.FC = () => {
   );
 };
 
-// use <Authenticator hideSignUp> to disable sign up option
-const App: React.FC = () => {
+// Protected route wrapper component that requires authentication
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Authenticator hideSignUp>
-      <MainApp />
+      {children}
     </Authenticator>
+  );
+};
+
+// Component that determines if route should be protected or public
+const RouteManager: React.FC = () => {
+  const location = useLocation();
+  
+  // Check if current route should be public (no authentication required)
+  const isPublicRoute = location.pathname === '/oauth/consent';
+  
+  if (isPublicRoute) {
+    return (
+      <Routes>
+        <Route path="/oauth/consent" element={<OAuthConsent />} />
+      </Routes>
+    );
+  }
+  
+  // All other routes require authentication
+  return (
+    <ProtectedRoute>
+      <Routes>
+        <Route path="/*" element={<MainApp />} />
+      </Routes>
+    </ProtectedRoute>
+  );
+};
+
+// Main App component with routing
+const App: React.FC = () => {
+  return (
+    <Router>
+      <RouteManager />
+    </Router>
   );
 };
 
