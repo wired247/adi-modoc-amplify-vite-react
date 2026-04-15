@@ -28,7 +28,7 @@ export default function OAuthConsent() {
       } = await supabase.auth.getUser()
 
       if (!user) {
-        navigate(`/login?redirect=/oauth/consent?authorization_id=${authorizationId}`)
+        navigate(`/login?redirect=${encodeURIComponent(`/oauth/consent?authorization_id=${authorizationId}`)}`)
         return
       }
 

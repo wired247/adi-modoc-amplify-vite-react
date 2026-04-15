@@ -12,6 +12,7 @@ import PrescriptionModal from './PrescriptionModal.tsx';
 import ChooseDateModal from './ChooseDateModal.tsx';
 import AnalogDevicesLogo1 from "./AnalogDevicesLogo1";
 import OAuthConsent from './OAuthConsent';
+import Login from './Login';
 import './App.css';
 
 const MainApp: React.FC = () => {
@@ -198,79 +199,6 @@ const MainApp: React.FC = () => {
       // setLoading(false);
     }
   };
-
-  /*
-  const zoneFromZoneName = (zoneName: string) => {
-    return DefaultZones.find((zone: { name: string; }) => zone.name === zoneName);
-  };
-
-  const deviceZonesFromPrescription = (prescription: any) => {
-    // Convert prescription object to zones array format expected by the device
-    if (!prescription) {
-      return [];
-    }
-
-    const zones = [];
-    
-    // Map prescription zones to device zones format
-    if (prescription.first && prescription.firstDuration) {
-      const thresholds = zoneFromZoneName(prescription.first);
-      zones.push({
-        order: 1,
-        minHR: thresholds ? thresholds.minHR : 40,
-        maxHR: thresholds ? thresholds.maxHR : 150,
-        duration: prescription.firstDuration,
-        color: thresholds ? thresholds.color : '#c0c0c0'
-      });
-    }
-    
-    if (prescription.second && prescription.secondDuration) {
-      const thresholds = zoneFromZoneName(prescription.second);
-      zones.push({
-        order: 2,
-        minHR: thresholds ? thresholds.minHR : 40,
-        maxHR: thresholds ? thresholds.maxHR : 150,
-        duration: prescription.secondDuration,
-        color: thresholds ? thresholds.color : '#c0c0c0'
-      });
-    }
-    
-    if (prescription.third && prescription.thirdDuration) {
-      const thresholds = zoneFromZoneName(prescription.third);
-      zones.push({
-        order: 3,
-        minHR: thresholds ? thresholds.minHR : 40,
-        maxHR: thresholds ? thresholds.maxHR : 150,
-        duration: prescription.thirdDuration,
-        color: thresholds ? thresholds.color : '#c0c0c0'
-      });
-    }
-    
-    if (prescription.fourth && prescription.fourthDuration) {
-      const thresholds = zoneFromZoneName(prescription.fourth);
-      zones.push({
-        order: 4,
-        minHR: thresholds ? thresholds.minHR : 40,
-        maxHR: thresholds ? thresholds.maxHR : 150,
-        duration: prescription.fourthDuration,
-        color: thresholds ? thresholds.color : '#c0c0c0'
-      });
-    }
-    
-    if (prescription.fifth && prescription.fifthDuration) {
-      const thresholds = zoneFromZoneName(prescription.fifth);
-      zones.push({
-        order: 5,
-        minHR: thresholds ? thresholds.minHR : 40,
-        maxHR: thresholds ? thresholds.maxHR : 150,
-        duration: prescription.fifthDuration,
-        color: thresholds ? thresholds.color : '#c0c0c0'
-      });
-    }
-
-    return zones;
-  }
-  */
 
   const deviceTargetsFromPrescription = (prescription: any) => {
     // Convert prescription object to targets array
@@ -715,12 +643,13 @@ const RouteManager: React.FC = () => {
   const location = useLocation();
   
   // Check if current route should be public (no authentication required)
-  const isPublicRoute = location.pathname === '/oauth/consent'  || location.pathname === '/oauth/consent/';
+  const isPublicRoute = location.pathname === '/oauth/consent'  || location.pathname === '/login';
   
   if (isPublicRoute) {
     return (
       <Routes>
         <Route path="/oauth/consent" element={<OAuthConsent />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     );
   }
