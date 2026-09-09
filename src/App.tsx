@@ -55,6 +55,7 @@ const MainApp: React.FC = () => {
     "User 3": "ADI_user3_device",
     "DW Samsung": "ADI_Samsung_SM-A146U1",
     "Subash": "ADI_Subash_testing",
+    "DryRun": "ADI_DryRun_testing",
   }
 
   // Fetch authentication information
